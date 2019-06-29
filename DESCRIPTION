@@ -1,0 +1,24 @@
+Package: metacal
+Title: Bias estimation and calibration for metagenomics experiments
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Michael",
+           family = "McLaren",
+           role = c("aut", "cre"),
+           email = "m.mclaren42@gmail.com",
+           comment = c(ORCID = "0000-0003-1575-473X"))
+Description: The metacal package provides tools for bias estimation and
+    calibration in marker-gene and metagenomics sequencing experiments.
+License: MIT + file LICENSE
+Suggests: 
+    testthat,
+    roxygen2,
+    knitr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Imports: 
+    magrittr
+VignetteBuilder: knitr
