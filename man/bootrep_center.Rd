@@ -2,12 +2,12 @@
 % Please edit documentation in R/compositional-mean.R
 \name{bootrep_center}
 \alias{bootrep_center}
-\title{Draw bootstrap replicates of the sample center.}
+\title{Generate bootstrap replicates of the sample center}
 \usage{
 bootrep_center(.data, R = 4000, N = nrow(.data), method = "proj",
   dist = "dirichlet", in_scale = "linear", out_scale = "linear",
   denom = NULL)
 }
 \description{
-Draw bootstrap replicates of the sample center.
+Generate bootstrap replicates of the sample center
 }

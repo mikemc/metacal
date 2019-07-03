@@ -7,9 +7,9 @@
 proj_mat(K, M = c())
 }
 \arguments{
-\item{K}{number of components (taxa)}
+\item{K}{number of elements (taxa)}
 
-\item{M}{set of missing components (default is none missing)}
+\item{M}{set of missing elements (default is none missing)}
 }
 \description{
 Used internally for the "proj" method of computing the compositional mean.

@@ -6,7 +6,7 @@
 \usage{
 center(.data, weights = rep(1, nrow(.data)), method = "proj",
   in_scale = "linear", out_scale = "linear", denom = NULL,
-  enframe = FALSE, bound = 10)
+  enframe = FALSE, components = FALSE)
 }
 \arguments{
 \item{.data}{\itemize{
@@ -35,11 +35,6 @@ center(.data, weights = rep(1, nrow(.data)), method = "proj",
 
 \item{enframe}{\itemize{
 \item whether to return the bias estimate as a two-column tibble
-}}
-
-\item{bound}{\itemize{
-\item single number giving the lower and upper bound on the alr
-efficiencies ("rss" only)
 }}
 }
 \description{

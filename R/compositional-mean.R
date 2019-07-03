@@ -24,13 +24,11 @@
 #' @param out_scale - "linear" (default) or "log"
 #' @param denom - Taxa to use in the denominator; if NULL, use all taxa.
 #' @param enframe - whether to return the bias estimate as a two-column tibble
-#' @param bound - single number giving the lower and upper bound on the alr
-#'   efficiencies ("rss" only) 
 #'
 #' @export
 center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
     in_scale = "linear", out_scale = "linear", denom = NULL, enframe = FALSE, 
-    bound = 10) {
+    components = FALSE) {
     if (!(in_scale %in% c("linear", "log")))
         stop('`in_scale` must be "linear" or "log"')
     if (!(out_scale %in% c("linear", "log")))
@@ -48,6 +46,13 @@ center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
     if ( ! all(is.finite(mat) | is.nan(mat)) )
         stop('Elements of log compositions must be finite or NaN')
 
+    # Check that there is only one component in the co-occurence graph (and
+    # that it includes all taxa)
+    cmps <- cooccurrence_components(mat)
+    if ( !components && (length(unique(cmps)) > 1) )
+        # stop('Co-occurrance graph has multiple components')
+        stop('The center is not fully determined')
+
     if (method == "proj") {
         b <- log_center_proj(mat, weights)
     } else if (method == "gm") {
@@ -62,8 +67,15 @@ center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
     if (out_scale == "linear")
         b <- exp(b)
 
-    if (enframe)
+    if (components) {
+        b <- left_join(
+            tibble::enframe(b, "Taxon", "Center"),
+            tibble::enframe(cmps, "Taxon", "Component"), 
+            by = "Taxon"
+        )
+    } else if (enframe) {
         b <- tibble::enframe(b, "Taxon", "Center")
+    }
 
     b
 }
@@ -73,8 +85,8 @@ center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
 #' Used internally for the "proj" method of computing the compositional mean.
 #' See vandenBoogaart2006 and Bren2008.
 #'
-#' @param K number of components (taxa)
-#' @param M set of missing components (default is none missing)
+#' @param K number of elements (taxa)
+#' @param M set of missing elements (default is none missing)
 proj_mat <- function(K, M = c()) {
     mat <- diag(nrow = K) - 1/(K - length(M))
     mat[M,] <- 0
@@ -118,6 +130,8 @@ log_center_proj <- function(mat, weights = rep(1, nrow(mat))) {
     clr_center
 }
 
+#' @param bound - single number giving the lower and upper bound on the alr
+#'   efficiencies ("rss" only) 
 log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 
     # This function computes the squared Aitchison norm of x on the
@@ -160,13 +174,10 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 # Boostrapping ----------------------------------------------------------------
 
 # TODO: 
-# - consider what the input should be : a df with sample, observed, and actual,
-# or a matrix or wide data frame of compositional errors
 # - add tests
 # - add documentation
-# - Test handling of log scale
-# - Change type arg to be based on the weight distribution, "multinomial" or "dirichlet"
-# dist = "dirichlet" (or maybe distr a better keyword)
+# - Test handling of log scale and non-default denominator
+# - Warn if not all samples have all taxa and dist = "multinomial"
 
 # Choice of two weight distributions - Multinomial(N, rep(1/S, S)), as in the
 # classic bootstrap, and Dirichlet(rep(1, S)), as in the Bayesian bootstrap of
@@ -174,63 +185,64 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 
 # N - the choice of N for multinomial samplign.
 
-#' Draw bootstrap replicates of the sample center.
+#' Generate bootstrap replicates of the sample center
 #'
 #' @export
 bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
     dist = "dirichlet", in_scale = "linear", out_scale = "linear",
     denom = NULL) {
 
-    if (!(in_scale %in% c("linear", "log")))
-        stop('`in_scale` must be "linear" or "log"')
-    if (!(out_scale %in% c("linear", "log")))
-        stop('`out_scale` must be "linear" or "log"')
-    if (!(method %in% c("proj", "gm", "rss")))
-        stop('`method` must be "proj", "gm", or "rss"')
     if (!(dist %in% c("multinomial", "dirichlet")))
         stop('`dist` must be "multinomial" or "dirichlet"')
 
-    if (N < nrow(.data) & dist == "dirichlet")
-        stop('`N < nrow(.data)` only supported with dist = "multinomial"')
+    if (N != nrow(.data) & dist == "dirichlet")
+        stop('`N != nrow(.data)` only supported with dist = "multinomial"')
 
-    N0 <- nrow(.data)
+    # Test on the full dataset. Ensures that the bias estimate is fully-defined
+    # if all samples get positive weight.
+    bhat <- center(.data, method = method, in_scale = in_scale, 
+        out_scale = out_scale, denom = denom)
 
     mat <- .data %>% as("matrix")
     if (in_scale == "linear")
         mat <- log(mat)
 
-    # version of `center()` that takes the weight vector first
-    center_boot <- function (wt, .data, method) {
-        center(.data, wt, 
-            in_scale = "log", out_scale = "log", denom = denom,
-            method = method, enframe = TRUE)
-    }
-
     # List of weights for each replicate
     if (dist == "multinomial") {
         # Weights ~ Multinomial(N, rep(1, N0) / N0)
+        N0 <- nrow(.data)
         wmat <- rmultinom(R, N, rep(1, N0))
         wlist <- lapply(seq(R), function(i) wmat[,i])
     } else if (dist == "dirichlet") {
         # Weights ~ Dirichlet(rep(1, N))
+        # Can get a single draw from a Dirichlet(rep(1, N)) by normalizing a
+        # vector of K iid exponential random variables to sum to 1; however,
+        # normalization is optional when weights are passed to the weighted
+        # center functions.
         wlist <- rep(N, R) %>%
             map(rexp, rate = 1)
     }
     names(wlist) <- seq_along(wlist)
-    reps <- map_dfr(wlist, center_boot, .data = mat, method = method, 
-        .id = ".id")
+
+    # Define the function to compute Bhat
+    if (method == "proj") {
+        log_center <- function(w, mat) log_center_proj(mat, w)
+    } else if (method == "gm") {
+        log_center <- function(w, mat) log_center_gm(mat, w)
+    } else if (method == "rss") {
+        log_center <- function(w, mat) log_center_rss(mat, w)
+    }
+    # Compute Bhat for each bootstrap replicate
+    reps <- map(wlist, log_center, mat = mat)
+    # Set the denominator
+    if (!is.null(denom))
+        reps <- map(reps, ~ . - mean(.[denom]))
+    # Join into a single data frame
+    reps <- map_dfr(reps, enframe, "Taxon", "Center", .id = ".id")
 
     if (out_scale == "linear")
         reps <- mutate(reps, Center = exp(Center))
-        
+
     reps
 }
-
-# Summarize with
-# best <- center(mat, method = method, enframe = TRUE)
-# se <- reps %>%
-#     group_by(Taxon) %>%
-#     summarize(gm_se = gm_sd(Bias))
-# left_join(best, se, by = "Taxon")
-# # %>% mutate(lower = Center / (gm_se^Z), upper = Center * (gm_se^Z))
 
