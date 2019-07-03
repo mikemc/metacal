@@ -10,6 +10,11 @@ Authors@R:
 Description: The metacal package provides tools for bias estimation and
     calibration in marker-gene and metagenomics sequencing experiments.
 License: MIT + file LICENSE
+Imports:
+    tibble,
+    dplyr,
+    igraph,
+    magrittr
 Suggests: 
     testthat,
     roxygen2,
@@ -19,6 +24,4 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
-Imports: 
-    magrittr
 VignetteBuilder: knitr
