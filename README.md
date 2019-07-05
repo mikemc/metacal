@@ -18,10 +18,10 @@ devtools::install_github("mikemc/metacal")
 
 ## Usage
 
-See the package tutorial for a demonstration of how to estimate bias from
-control samples with known composition (i.e., mock community samples), and how
-to calibrate the relative abundances in unknown samples of the taxa that were
-in the controls.
+See the [package tutorial](https://mikemc.github.io/metacal/articles/tutorial.html)
+for a demonstration of how to estimate bias from control samples with known
+composition (i.e., mock community samples), and how to calibrate the relative
+abundances in unknown samples of the taxa that were in the controls.
 
 The primary utility of this package is quantitatively estimating the bias of
 protocols in quality control experiments, where samples with known composition
