@@ -1,0 +1,442 @@
+---
+title: "Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(metacal)
+```
+
+This tutorial goes through the process of estimating bias and performing
+calibration in the special case where the bias of all the taxa of interest can
+be directly measured from the control samples. It covers estimating the bias
+with associated uncertainty from a set of control samples, evaluating the
+consistency of bias across multiple controls, and using the bias estimate to
+calibrate samples with unknown composition.
+
+# Load the demonstration dataset
+
+For this tutorial, we will use the data from the cell-mixtures experiment of
+Brooks et al. (2015), which is included in this package. Each sample is a
+cellular mock community consisting of an even mixture of one to seven of a set
+of seven bacterial species.  The sample metadata and the observed and actual
+species abundances are stored as `.csv` files. The abundances are stored in
+standard OTU-table format with samples as rows and taxa as columns.
+```{r, message = FALSE}
+sam <- read_csv(system.file("extdata", "brooks2015-sample-data.csv", 
+        package = "metacal"))
+observed <- read_csv(system.file("extdata", "brooks2015-observed.csv", 
+        package = "metacal"))
+actual <- read_csv(system.file("extdata", "brooks2015-actual.csv", 
+        package = "metacal"))
+sam
+observed
+actual
+```
+The `Other` column in `observed` includes all reads assigned to other species
+due to contamination or taxonomic misassignment.
+
+The samples contain mixtures of 1, 2, 3, 4, or 7 species, 
+```{r}
+sam %>%
+    group_by(Num_species) %>%
+    count
+```
+For this tutorial, we will pick the 4-species sample and two each of the 2-,
+3-, and 7-species samples to serve as the control samples that we will use to
+estimate bias.
+```{r}
+controls <- c("s1-23", "s1-35", "s2-4", "s2-5", "s2-8", "s2-9", "s2-14")
+sam %>%
+    filter(Sample %in% controls) %>%
+    arrange(Num_species)
+sam <- sam %>%
+    mutate(Type = ifelse(Sample %in% controls, "Control", ""))
+actual <- filter(actual, Sample %in% controls)
+```
+We'll also abbreviate the taxa names for greater compactness in R output,
+```{r}
+tax_abbrev <- function (taxa) {
+    m <- str_match(taxa, "([A-Z])[a-z]+_([a-z]{2})[a-z]*")
+    ifelse(is.na(m[,1]), taxa, paste0(m[,2], m[,3]))
+}
+colnames(observed)
+tax_abbrev(colnames(observed)[-1])
+observed <- rename_at(observed, vars(-Sample), tax_abbrev)
+actual <- rename_at(actual, vars(-Sample), tax_abbrev)
+```
+
+**Note:** Bias estimation requires that the `observed` and `actual` tables use
+the same taxonomic identifiers, so that we can match the observed and true
+abundances for each taxon. We've already taken care of this in the
+demonstration data. Real applications may require an extra step to reconcile
+the taxonomic identifiers output by the bioinformatics pipeline with those in
+the table of actual compositions.
+
+# Estimate bias
+
+## Compute the error matrix
+
+To estimate bias, we first need to get a matrix with the compositional error
+between the observed and actual compositions for the control samples. This
+matrix should have samples corresponding to rows, taxa corresponding to
+columns, and columns named by the taxa.
+
+### Approach 1: Matrices
+
+First, convert to numeric matrices using the `as_matrix()` helper function,
+```{r}
+observed_mat <- as_matrix(observed, rownames = Sample)
+head(observed_mat)
+actual_mat <- as_matrix(actual, rownames = Sample)
+actual_mat %>% round(3)
+```
+Then, get compatible matrices with just the control samples and taxa, making
+sure that rows and columns are in the same order,
+```{r}
+control_samples <- rownames(actual_mat)
+control_taxa <- colnames(actual_mat)
+observed_mat <- observed_mat[control_samples, control_taxa]
+actual_mat <- actual_mat[control_samples, control_taxa]
+```
+The final step is to divide the observed by the actual abundances to get the
+error matrix,
+```{r}
+error_mat <- observed_mat / actual_mat
+error_mat
+```
+This step can lead to two types of problems. Infinite values (`Inf`s) arise
+from taxa that have a positive abundance in `observed` but not in `actual`. We
+see several cases of that here.  The opposite situation, a taxon with a
+positive abundance in `actual` but an abundance of 0 in `observed`, occurs when
+taxa present in the controls were not detected. This situation does not occur
+here but is likely to occur in control samples with low-frequency or
+low-efficiency taxa and low sequencing depths.  In contrast, the `NaN`s we see
+are fine: these are caused by dividing `0/0` and reflect taxa that are neither
+observed nor actually present in the control. To ensure that we have no `Inf`s
+or `0`s in the error matrix, we can add a pseudocount (or apply another
+zero-removal strategy) to the observed matrix and "mask" (set to 0) the
+observations of taxa not in `actual`,
+```{r}
+observed_mat0 <- (observed_mat + 0.5) * (actual_mat > 0)
+```
+and then compute the error matrix as before,
+```{r}
+error_mat <- observed_mat0 / actual_mat
+error_mat
+# Check that all entries either between 0 and Infinity, or NaN
+error_mat %>%
+    {(is.finite(.) & (. > 0)) | is.nan(.)} %>%
+    all
+```
+Because we treat the abundances and the error as compositional vectors, there
+is no need to normalize the abundances to proportions before or after computing
+the error.
+
+### Approach 2: Tidy data frames
+
+First, we combine the observed and actual compositions into a single "tidy"
+data frame, where each row corresponds to an individual (sample, taxon)
+observation,
+```{r}
+observed.tidy <- observed %>%
+    gather("Taxon", "Observed", -Sample)
+actual.tidy <- actual %>%
+    gather("Taxon", "Actual", -Sample)
+joint <- actual.tidy %>%
+    left_join(observed.tidy, by = c("Sample", "Taxon"))
+head(joint)
+```
+The `left_join` operation only keeps taxa that are in `actual`, which in this
+case is just the 7 mock species. 
+
+Before proceeding, we will add a pseudocount to the observed read counts and
+filter reads from taxa that are not actually in the control samples (to avoid
+`Inf`s and `0`s in our error matrix, as discussed above),
+```{r}
+joint <- joint %>%
+    mutate(Observed0 = (Observed + 0.5) * (Actual > 0))
+head(joint)
+```
+
+Next, we compute the compositional error by dividing the observed abundance by
+the actual abundance,
+```{r}
+joint <- joint %>%
+    mutate(Error = Observed0 / Actual)
+```
+Because we treat the abundances and the error as compositional vectors, there
+is no need to normalize the abundances to proportions before or after computing
+the error. Finally, we get a matrix of the errors using the `build_matrix()`
+helper function,
+```{r}
+error_mat0 <- build_matrix(joint, Sample, Taxon, Error)
+```
+This error matrix is the same we obtained by Approach 1, except that the row
+and column orders may differ.
+```{r}
+all.equal(error_mat, error_mat0[rownames(error_mat), colnames(error_mat)])
+```
+
+## Estimate the bias with standard errors
+
+Next, we estimate the bias as the compositional mean, or _center_, of the
+errors in the control samples. We do this with the `center()` function, which
+computes the center of a set of compositional vectors that are stored as a
+matrix. By default, `center()` returns a named vector,
+```{r}
+center(error_mat)
+```
+For many purposes it is more useful to obtain a data frame,
+```{r}
+bias <- center(error_mat, enframe = TRUE) %>%
+    rename(Bhat = Center)
+bias
+```
+We can get the pairwise bias with `compute_ratios()`,
+```{r}
+bias.pw <- bias %>%
+    compute_ratios(group_vars = c()) %>%
+    mutate(Pair = paste(Taxon.x, Taxon.y, sep = ":"))
+bias.pw
+```
+The `bootrep_center` function can be used to estimate uncertainty in the
+estimated bias,
+```{r}
+bootreps <- bootrep_center(error_mat) %>%
+    rename(Bhat = Center)
+bootreps.summary <- bootreps %>%
+    group_by(Taxon) %>%
+    summarize(Gm_mean = gm_mean(Bhat), Gm_se = gm_sd(Bhat))
+bias0 <- left_join(bias, bootreps.summary, by = "Taxon")
+bias0
+```
+By converting the bootstrap estimates to pairwise estimates, we can also get
+standard errors for the pairwise bias,
+```{r}
+bootreps.pw <- bootreps %>%
+    compute_ratios(group_vars = ".id")
+summary.pw <- bootreps.pw %>%
+    group_by(Taxon.x, Taxon.y) %>%
+    summarize(Gm_mean = gm_mean(Bhat), Gm_se = gm_sd(Bhat))
+bias.pw0 <- left_join(bias.pw, summary.pw, by = c("Taxon.x", "Taxon.y"))
+bias.pw0
+```
+
+## Evaluate the bias estimate visually
+
+Plotting the bias estimate against the observed errors is useful to get a sense
+of the strength of bias versus noise in the control measurements were and how
+precisely the bias is estimated. When the control samples vary in their actual
+compositions, such plots can also allow us to confirm that the bias remains
+consistent across samples with different compositions.  Since bias acts
+consistently on taxon ratios, and different control samples can have different
+taxa, we plot the error in the ratios for each pair of taxa over the samples
+where that pair was observed.
+
+First, we get a data frame with the observed errors using the
+`compute_ratios()` function, and a data frame with the predicted ratios from
+the pairwise bias estimates (with standard errors) we found earlier,
+```{r}
+ratios <- joint %>%
+    compute_ratios %>%
+    mutate(Pair = paste(Taxon.x, Taxon.y, sep = ":")) %>%
+    filter(!is.nan(Error), Taxon.x < Taxon.y)
+ratios.pred <- bias.pw0 %>%
+    mutate(Pair = paste(Taxon.x, Taxon.y, sep = ":")) %>%
+    filter(Taxon.x < Taxon.y)
+```
+Next, we plot the observed error along with the estimated bias (multiplied and
+divided by two geometric standard errors),
+```{r}
+ggplot(ratios, aes(Pair, Error, color = Sample)) +
+    geom_hline(yintercept = 1, color = "grey") +
+    geom_pointrange(data = ratios.pred, aes(y = Bhat, 
+            ymin = Bhat / Gm_se^2, ymax = Bhat * Gm_se^2), 
+        color = "black") +
+    geom_jitter(width = 0.2) +
+    scale_y_log10() +
+    coord_flip()
+```
+
+# Calibration
+
+Next, we use the bias estimated from the control samples to calibrate the
+relative abundances in the non-control samples, according to Equation (9) of
+the manuscript. To illustrate how to apply calibration when we were only able
+to estimate bias for a subset of the observed taxa, we treat the `Other`
+taxonomic category as if it were an 8th species that we observed in the target
+samples but that was not in the controls.
+
+### Approach 1: Matrices
+
+First, get a matrix version of the observed compositions with all samples, not
+just the controls;
+```{r}
+observed_mat <- as_matrix(observed, rownames = Sample)
+```
+Next, get a vector of the estimated bias, ensuring that taxa are in the same
+order as in the observed matrix,
+```{r}
+bias_vec <- bias %>% deframe
+bias_vec <- bias_vec[colnames(observed_mat)]
+bias_vec
+```
+Note that any taxa in `observed` but not in `bias` have a value of `NA` in
+`bias_vec`. Finally, get a matrix with the calibrated compositions by dividing
+the observed compositions by the bias,
+```{r}
+calibrated_mat <- sweep(observed_mat, 2, bias_vec, "/")
+head(calibrated_mat) %>% round(2)
+```
+Any measured taxa for which bias was not estimated cannot be calibrated, and so
+have calibrated values of `NA`. We can compute calibrated proportions for the
+subcompositions on just the control taxa with
+```{r}
+calibrated_mat0 <- calibrated_mat[, control_taxa]
+totals <- apply(calibrated_mat0, 1, sum)
+calibrated_mat.prop <- sweep(calibrated_mat0, 1, totals, "/")
+head(calibrated_mat.prop) %>% round(3)
+```
+
+### Approach 2: Tidy data frames
+
+Get a tidy data frame with the observed compositions and the bias
+```{r}
+cal <- observed.tidy %>%
+    left_join(bias, by = "Taxon")
+cal %>% filter(Sample == "s1-1")
+```
+Calibrate each sample by dividing the observed abundance by the bias,
+```{r}
+cal <- cal %>%
+    mutate(Calibrated = Observed / Bhat)
+cal %>% filter(Sample == "s1-1")
+```
+Any measured taxa for which bias was not estimated cannot be calibrated, and so
+have calibrated values of `NA`. We can compute calibrated proportions for the
+subcompositions on just the control taxa with
+```{r}
+cal.prop <- cal %>%
+    filter(Taxon %in% control_taxa) %>%
+    group_by(Sample) %>%
+    mutate_at(vars(Observed, Calibrated), ~ . / sum(.))
+cal.prop %>% filter(Sample == "s1-1")
+```
+
+### Visualize proportions before and after
+
+In the Brooks dataset, each sample was constructed to be an even mixture of the
+chosen subset of species. Let's check the effects of calibration on the
+estimated proportiosn for three of the 3-species samples. 
+```{r}
+samples <- c("s1-6", "s1-2", "s1-3")
+plot_df <- cal.prop %>%
+    filter(Sample %in% samples) %>%
+    gather("Type", "Proportion", "Observed", "Calibrated") %>%
+    mutate(Type = factor(Type, c("Observed", "Calibrated")))
+ggplot(plot_df, aes(Type, Proportion, fill = Taxon)) +
+    geom_col() +
+    facet_wrap(~Sample) +
+    scale_fill_brewer(type = "qual")
+```
+
+The plot shows that the calibrated proportions are much closer to the nominally
+correct proportions of (0.33, 0.33, 0.33). Also, note that the proportion of
+_Prevotella bivia_ (Pbi) is correctly calibrated downward in Sample "s1-3" but
+upward in proportion in Sample "s1-6".
+
+# Appendix: Taxonomic overlap needed for a fully-determined bias estimate
+
+To fully estimate the bias of all taxa requires each taxon to appear in at
+least one control sample _and_ that there is sufficient taxonomic overlap among
+the controls. A detailed explanation of this idea is given in the Appendix 2 of
+the manuscript; however, the basic principle can be easily understood with a
+few examples.
+
+### Scenario 1: Two control samples with non-overlapping sets of taxa
+
+Suppose that rather than the 7 control samples we used earlier, we had only
+measured samples "s2-9" and "s2-4".
+```{r}
+error_mat1 <- error_mat[c("s2-9", "s2-4"), ]
+error_mat1
+```
+Note that there are two taxa, "Lin" and "Sag", that do not appear in either
+control sample, and so we won't be able to estimate their efficiencies relative
+to the other taxa. However, we also have a problem if we wish to be able to
+estimate the bias of the 5 remaining taxa, due to the lack of taxonomic overlap
+between the two samples,
+```{r}
+# List the taxa present in each sample
+apply(error_mat1, 1, function(x) x[!is.nan(x)] %>% names)
+```
+For a given control sample, it is only possible to measure the relative
+efficiencies between the taxa in that sample, and we have no way to measure the
+relative efficiencies between the two groups of taxa in this case. There are
+infinitely many possible estimates of the bias that are equally consistent with
+the data, which maintain the ratios between taxa in the two groups but have
+different ratios between the groups. As a result, the `center()` function will
+give an error when called with its default arguments in this case,
+```{r, error = TRUE}
+center(error_mat1)
+```
+However, because it is still useful to be able to estimate the bias within each
+group (or component), the `center()` function takes an argument, `components`,
+that lets us get a bias estimate anyways.
+```{r}
+center(error_mat1, components = TRUE) %>% 
+    arrange(Component)
+```
+The `Component` column gives the component of the taxon co-occurrence graph,
+which indicates the groups of taxa within which the bias was estimated.
+
+To help examine the co-occurrence structure ahead of time, we offer several
+helper functions with the form `cooccurrence_*()`. In particular, you can view
+the co-occurrence network with
+```{r}
+g <- cooccurrence_network(error_mat1)
+plot(g, edge.label=round(igraph::E(g)$weight, 3))
+```
+
+The edge labels indicate the number of samples in which the pair of taxa
+co-occur.
+
+### Secario 2: A third control sample is added that links the first two
+
+Now suppose that we had also measured sample "s1-35" in addition to "s2-9" and
+"s2-4".
+```{r}
+error_mat2 <- error_mat[c("s2-9", "s2-4", "s1-35"), ]
+error_mat2
+apply(error_mat2, 1, function(x) x[!is.nan(x)] %>% names)
+```
+This sample contains one of the previously missing taxa, "Lin". More
+interestingly, it contains at least one taxon from each group of taxa
+contained in first two samples. This information linking the bias between the
+two groups allows us to obtain an estimate of the bias for all 6 taxa in the
+three controls, which we can confirm from the co-occurrence network,
+```{r}
+g <- cooccurrence_network(error_mat2)
+plot(g, edge.label = igraph::E(g)$weight)
+```
+
+Because the 7th taxon is still missing, we still need to use the `components =
+TRUE` option when estimating the bias,
+```{r}
+center(error_mat2, components = TRUE) %>% 
+    arrange(Component)
+```
+
