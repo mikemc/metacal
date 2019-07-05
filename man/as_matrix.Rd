@@ -2,10 +2,10 @@
 % Please edit documentation in R/utilities.R
 \name{as_matrix}
 \alias{as_matrix}
-\title{Coerce a (wide) tibble to a matrix}
+\title{Coerce a (wide) data frame to a matrix}
 \usage{
-as_matrix(tb, rownames = NULL)
+as_matrix(.data, rownames = NULL)
 }
 \description{
-Coerce a (wide) tibble to a matrix
+Coerce a (wide) data frame to a matrix
 }

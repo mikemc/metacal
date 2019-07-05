@@ -2,10 +2,10 @@
 % Please edit documentation in R/math.R
 \name{odds}
 \alias{odds}
-\title{Convert proportions}
+\title{Odds of the probability vector x}
 \usage{
 odds(x)
 }
 \description{
-Convert proportions
+Odds of the probability vector x
 }

@@ -67,6 +67,11 @@ d5 <- exp2 %>%
 
 # TODO: Dataset w/ covariance in the errors
 
+# Detach everything to make sure metacal is importing correctly
+detach(package:tibble)
+detach(package:tidyr)
+detach(package:dplyr)
+
 # Mean ------------------------------------------------------------------------
 
 test_that("all methods agree when all samples have all taxa", {
@@ -81,7 +86,7 @@ test_that("the 'proj' and 'rss' methods agree when samples have different taxa, 
 })
 
 test_that("the 'gm' method returns all NaNs when some taxa-sample observations are missing", {
-    expect_equal(center(d2, method = "gm"), 
+    expect_equal(center(d2, method = "gm"),
         rlang::rep_named(colnames(d2), NaN))
 })
 
@@ -115,6 +120,6 @@ test_that("sampling rows or using `weights` gives an equal estimate", {
 
 # Additional tests to add
 # - Check various in scale and out scale combinations
-# - Check behavior in the exp3 case (different cliques of taxa)
+# - Check behavior in the exp3 case (bias not fully defined)
 # - Check that the projection method gives the right answer in the
-# deterministic missing observations case
+#   deterministic missing observations case

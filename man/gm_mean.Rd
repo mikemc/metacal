@@ -4,7 +4,7 @@
 \alias{gm_mean}
 \title{Geometric mean of x}
 \usage{
-gm_mean(x, na_rm = FALSE)
+gm_mean(x, na.rm = FALSE)
 }
 \description{
 Geometric mean of x

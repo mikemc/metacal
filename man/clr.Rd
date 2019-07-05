@@ -2,9 +2,9 @@
 % Please edit documentation in R/math.R
 \name{clr}
 \alias{clr}
-\title{Centered log-ratio transform of x.}
+\title{Compute the centered log-ratio transform of x}
 \usage{
-clr(x, base = exp(1), na_rm = FALSE)
+clr(x, base = exp(1), na.rm = FALSE)
 }
 \arguments{
 \item{x}{Vector of abundances.}
@@ -12,5 +12,5 @@ clr(x, base = exp(1), na_rm = FALSE)
 \item{base}{Base for logarithm}
 }
 \description{
-Centered log-ratio transform of x.
+Compute the centered log-ratio transform of x
 }

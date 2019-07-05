@@ -9,12 +9,17 @@ Authors@R:
            comment = c(ORCID = "0000-0003-1575-473X"))
 Description: The metacal package provides tools for bias estimation and
     calibration in marker-gene and metagenomics sequencing experiments.
+URL: https://github.com/mikemc/metacal
+BugReports: https://github.com/mikemc/metacal/issues
 License: MIT + file LICENSE
 Imports:
-    tibble,
     dplyr,
     igraph,
-    magrittr
+    magrittr,
+    MASS,
+    purrr,
+    rlang,
+    tibble
 Suggests: 
     testthat,
     roxygen2,

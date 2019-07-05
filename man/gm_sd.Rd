@@ -4,7 +4,7 @@
 \alias{gm_sd}
 \title{Geometric standard deviation of x}
 \usage{
-gm_sd(x, na_rm = FALSE)
+gm_sd(x, na.rm = FALSE)
 }
 \description{
 Note, uses denominator n-1

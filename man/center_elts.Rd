@@ -4,7 +4,7 @@
 \alias{center_elts}
 \title{Geometrically center the elements of x}
 \usage{
-center_elts(x, na_rm = FALSE)
+center_elts(x, na.rm = FALSE)
 }
 \description{
 Geometrically center the elements of x

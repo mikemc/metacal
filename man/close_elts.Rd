@@ -2,10 +2,10 @@
 % Please edit documentation in R/math.R
 \name{close_elts}
 \alias{close_elts}
-\title{"Close" the elements of x to proportions}
+\title{Close the elements of x to proportions}
 \usage{
-close_elts(x, na_rm = FALSE)
+close_elts(x, na.rm = FALSE)
 }
 \description{
-"Close" the elements of x to proportions
+Close the elements of x to proportions
 }

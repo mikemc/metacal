@@ -4,10 +4,10 @@
 \alias{anorm}
 \title{Aitchison norm of x}
 \usage{
-anorm(x, na_rm = FALSE)
+anorm(x, na.rm = FALSE)
 }
 \arguments{
-\item{na_rm;}{remove NAs and NaNs before calculating}
+\item{na.rm;}{remove NAs and NaNs before calculating}
 }
 \description{
 Aitchison norm of x

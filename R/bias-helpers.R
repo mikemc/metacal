@@ -22,17 +22,17 @@ NULL
 #' @export
 cooccurrence_matrix <- function(mat, all = TRUE) {
     ratios <- mat %>%
-        as_tibble(rownames = "Sample") %>%
-        gather("Taxon", "Value", -Sample) %>%
+        tibble::as_tibble(rownames = "Sample") %>%
+        tidyr::gather("Taxon", "Value", -Sample) %>%
         compute_ratios()
     if (!all) {
-        ratios <- filter(ratios, !is.na(Value))
+        ratios <- dplyr::filter(ratios, !is.na(Value))
     }
     adj_mat <- ratios %>%
-        filter(Taxon.x != Taxon.y) %>%
-        group_by(Taxon.x, Taxon.y) %>%
-        summarize(n = sum(!is.na(Value))) %>%
-        ungroup %>%
+        dplyr::filter(Taxon.x != Taxon.y) %>%
+        dplyr::group_by(Taxon.x, Taxon.y) %>%
+        dplyr::summarize(n = sum(!is.na(Value))) %>%
+        dplyr::ungroup() %>%
         build_matrix(Taxon.x, Taxon.y, n, 0)
     adj_mat
 }

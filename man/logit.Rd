@@ -2,10 +2,10 @@
 % Please edit documentation in R/math.R
 \name{logit}
 \alias{logit}
-\title{Logit (log-odds) of t}
+\title{Logit (log-odds) of the probability vector x}
 \usage{
 logit(x)
 }
 \description{
-Logit (log-odds) of t
+Logit (log-odds) of the probability vector x
 }

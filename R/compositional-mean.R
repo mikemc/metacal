@@ -58,7 +58,7 @@ center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
     } else if (method == "gm") {
         b <- log_center_gm(mat, weights)
     } else if (method == "rss") {
-        b <- log_center_rss(mat, weights, bound = bound)
+        b <- log_center_rss(mat, weights)
     }
 
     if (!is.null(denom))
@@ -68,7 +68,7 @@ center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
         b <- exp(b)
 
     if (components) {
-        b <- left_join(
+        b <- dplyr::left_join(
             tibble::enframe(b, "Taxon", "Center"),
             tibble::enframe(cmps, "Taxon", "Component"), 
             by = "Taxon"
@@ -103,7 +103,7 @@ log_center_gm <- function(mat, weights = rep(1, nrow(mat))) {
     clr_center
 }
 
-# Method from vandenBoogaart2006; described in vandenBoogaart2013 and at
+# Method from vandenBoogaart2006; also described in vandenBoogaart2013 and at
 # https://core.ac.uk/download/pdf/132548286.pdf (Bren2008)
 log_center_proj <- function(mat, weights = rep(1, nrow(mat))) {
 
@@ -175,7 +175,7 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 
 # TODO: 
 # - add tests
-# - add documentation
+# - improve documentation
 # - Test handling of log scale and non-default denominator
 # - Warn if not all samples have all taxa and dist = "multinomial"
 
@@ -183,9 +183,18 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 # classic bootstrap, and Dirichlet(rep(1, S)), as in the Bayesian bootstrap of
 # Rubin.
 
-# N - the choice of N for multinomial samplign.
+# N - the choice of N for multinomial sampling.
 
 #' Generate bootstrap replicates of the sample center
+#'
+#' @param .data - all-numeric data frame or matrix with taxa as columns
+#' @param R Number of bootstrap replicates
+#' @param N Number of trials for multinomial resampling
+#' @param method - "proj", "gm", or "rss"
+#' @param dist "dirichlet" or "multinomial" resampling
+#' @param in_scale - "linear" (default) or "log"
+#' @param out_scale - "linear" (default) or "log"
+#' @param denom - Taxa to use in the denominator; if NULL, use all taxa.
 #'
 #' @export
 bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
@@ -220,7 +229,7 @@ bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
         # normalization is optional when weights are passed to the weighted
         # center functions.
         wlist <- rep(N, R) %>%
-            map(rexp, rate = 1)
+            purrr::map(rexp, rate = 1)
     }
     names(wlist) <- seq_along(wlist)
 
@@ -233,15 +242,16 @@ bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
         log_center <- function(w, mat) log_center_rss(mat, w)
     }
     # Compute Bhat for each bootstrap replicate
-    reps <- map(wlist, log_center, mat = mat)
+    reps <- purrr::map(wlist, log_center, mat = mat)
     # Set the denominator
     if (!is.null(denom))
-        reps <- map(reps, ~ . - mean(.[denom]))
+        reps <- purrr::map(reps, ~ . - mean(.[denom]))
     # Join into a single data frame
-    reps <- map_dfr(reps, enframe, "Taxon", "Center", .id = ".id")
+    reps <- purrr::map_dfr(reps, tibble::enframe, "Taxon", "Center", 
+        .id = ".id")
 
     if (out_scale == "linear")
-        reps <- mutate(reps, Center = exp(Center))
+        reps <- dplyr::mutate(reps, Center = exp(Center))
 
     reps
 }
