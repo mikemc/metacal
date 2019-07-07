@@ -19,12 +19,14 @@ Imports:
     MASS,
     purrr,
     rlang,
-    tibble
+    tibble,
+    useful
 Suggests: 
     testthat,
     roxygen2,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyverse
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
