@@ -238,7 +238,7 @@ bias.pw0
 ## Evaluate the bias estimate visually
 
 Plotting the bias estimate against the observed errors is useful to get a sense
-of the strength of bias versus noise in the control measurements were and how
+of the strength of bias versus noise in the control measurements and how
 precisely the bias is estimated. When the control samples vary in their actual
 compositions, such plots can also allow us to confirm that the bias remains
 consistent across samples with different compositions.  Since bias acts

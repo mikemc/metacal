@@ -80,7 +80,7 @@
 <div id="metacal" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#metacal" class="anchor"></a>metacal</h1></div>
-<p>The metacal package provides tools for bias estimation and calibration in marker-gene and metagenomics sequencing experiments. It implements the methods described in <a href="https://www.biorxiv.org/content/10.1101/559831v1">McLaren MR, Willis AD, Callahan BJ (2019)</a> and is used for the analysis associated with that manuscript, available at the <a href="https://github.com/mikemc/2019-bias-manuscript">manuscript’s repository</a>.</p>
+<p>The metacal package provides tools for bias estimation and calibration in marker-gene and metagenomics sequencing experiments. It implements the methods described in <a href="https://www.biorxiv.org/content/10.1101/559831v2">McLaren MR, Willis AD, Callahan BJ (2019)</a> and is used for the analysis associated with that manuscript, available at the <a href="https://github.com/mikemc/mgs-bias-manuscript">manuscript’s repository</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -93,7 +93,7 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>See the <a href="https://mikemc.github.io/metacal/articles/tutorial.html">package tutorial</a> for a demonstration of how to estimate bias from control samples with known composition (i.e., mock community samples), and how to calibrate the relative abundances in unknown samples of the taxa that were in the controls.</p>
 <p>The primary utility of this package is quantitatively estimating the bias of protocols in quality control experiments, where samples with known composition are measured or samples with unknown composition are measured by multiple protocols.</p>
-<p>It is currently not possible to calibrate the composition of a natural community without making strong and untested assumptions about bias being the same for constructed and natural samples and about the efficiciencies of taxa not in the controls (e.g., approximating them by that of the closest relative or the average average efficiency). For this and other limitations described in the Discussion of our manuscript, calibration as a practical method to obtain quantitatively accurate composition measurements is not currently feasible using this or any package. However, calibration using a hypothesized bias (perhaps partially informed by experimental measurement) can still be useful to analyze the sensitivity of downstream results to bias, a use case we will illustrate in a future vignette.</p>
+<p>It is currently not possible to calibrate the composition of a natural community without making strong and untested assumptions about bias being the same for constructed and natural samples and about the efficiencies of taxa not in the controls (e.g., approximating them by that of the closest relative or the average efficiency). For this and other limitations described in the Discussion of our manuscript, calibration as a practical method to obtain quantitatively accurate composition measurements is not currently feasible using this or any package. However, calibration using a hypothesized bias (perhaps partially informed by experimental measurement) can still be useful to analyze the sensitivity of downstream results to bias, a use case we will illustrate in a future vignette.</p>
 </div>
 </div>
   </div>

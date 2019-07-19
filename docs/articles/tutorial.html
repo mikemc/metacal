@@ -88,20 +88,15 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co">#&gt; Registered S3 methods overwritten by 'ggplot2':</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt;   method         from </span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#&gt;   [.quosures     rlang</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt;   c.quosures     rlang</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">#&gt;   print.quosures rlang</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; ✔ ggplot2 3.1.1     ✔ purrr   0.3.2</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; ✔ tibble  2.1.3     ✔ dplyr   0.8.3</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt; ✔ tidyr   0.8.3     ✔ stringr 1.4.0</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; ✔ readr   1.3.1     ✔ forcats 0.4.0</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(metacal)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">#&gt; ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt; ✔ ggplot2 3.2.0     ✔ purrr   0.3.2</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#&gt; ✔ tibble  2.1.3     ✔ dplyr   0.8.3</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt; ✔ tidyr   0.8.3     ✔ stringr 1.4.0</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">#&gt; ✔ readr   1.3.1     ✔ forcats 0.4.0</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(metacal)</span></code></pre></div>
 <p>This tutorial goes through the process of estimating bias and performing calibration in the special case where the bias of all the taxa of interest can be directly measured from the control samples. It covers estimating the bias with associated uncertainty from a set of control samples, evaluating the consistency of bias across multiple controls, and using the bias estimate to calibrate samples with unknown composition.</p>
 <div id="load-the-demonstration-dataset" class="section level1">
 <h1 class="hasAnchor">
@@ -373,12 +368,12 @@
 <span id="cb19-9"><a href="#cb19-9"></a><span class="co">#&gt;   Taxon  Bhat Gm_mean Gm_se</span></span>
 <span id="cb19-10"><a href="#cb19-10"></a><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span></span>
 <span id="cb19-11"><a href="#cb19-11"></a><span class="co">#&gt; 1 Ava   0.342   0.341  1.08</span></span>
-<span id="cb19-12"><a href="#cb19-12"></a><span class="co">#&gt; 2 Gva   0.179   0.180  1.10</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a><span class="co">#&gt; 2 Gva   0.179   0.179  1.09</span></span>
 <span id="cb19-13"><a href="#cb19-13"></a><span class="co">#&gt; 3 Lcr   2.30    2.30   1.08</span></span>
 <span id="cb19-14"><a href="#cb19-14"></a><span class="co">#&gt; 4 Lin   4.51    4.50   1.05</span></span>
 <span id="cb19-15"><a href="#cb19-15"></a><span class="co">#&gt; 5 Pbi   1.63    1.63   1.07</span></span>
-<span id="cb19-16"><a href="#cb19-16"></a><span class="co">#&gt; 6 Sam   4.03    4.02   1.06</span></span>
-<span id="cb19-17"><a href="#cb19-17"></a><span class="co">#&gt; 7 Sag   0.241   0.240  1.05</span></span></code></pre></div>
+<span id="cb19-16"><a href="#cb19-16"></a><span class="co">#&gt; 6 Sam   4.03    4.01   1.06</span></span>
+<span id="cb19-17"><a href="#cb19-17"></a><span class="co">#&gt; 7 Sag   0.241   0.241  1.05</span></span></code></pre></div>
 <p>By converting the bootstrap estimates to pairwise estimates, we can also get standard errors for the pairwise bias,</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>bootreps.pw &lt;-<span class="st"> </span>bootreps <span class="op">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="st">    </span><span class="kw"><a href="../reference/compute_ratios.html">compute_ratios</a></span>(<span class="dt">group_vars =</span> <span class="st">".id"</span>)</span>
@@ -393,19 +388,19 @@
 <span id="cb20-11"><a href="#cb20-11"></a><span class="co">#&gt;  1 Ava     Ava     1      Ava:Ava  1       1   </span></span>
 <span id="cb20-12"><a href="#cb20-12"></a><span class="co">#&gt;  2 Ava     Gva     1.91   Ava:Gva  1.90    1.08</span></span>
 <span id="cb20-13"><a href="#cb20-13"></a><span class="co">#&gt;  3 Ava     Lcr     0.149  Ava:Lcr  0.148   1.15</span></span>
-<span id="cb20-14"><a href="#cb20-14"></a><span class="co">#&gt;  4 Ava     Lin     0.0759 Ava:Lin  0.0759  1.13</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a><span class="co">#&gt;  4 Ava     Lin     0.0759 Ava:Lin  0.0758  1.13</span></span>
 <span id="cb20-15"><a href="#cb20-15"></a><span class="co">#&gt;  5 Ava     Pbi     0.210  Ava:Pbi  0.209   1.13</span></span>
 <span id="cb20-16"><a href="#cb20-16"></a><span class="co">#&gt;  6 Ava     Sag     1.42   Ava:Sag  1.42    1.12</span></span>
-<span id="cb20-17"><a href="#cb20-17"></a><span class="co">#&gt;  7 Ava     Sam     0.0850 Ava:Sam  0.0850  1.10</span></span>
-<span id="cb20-18"><a href="#cb20-18"></a><span class="co">#&gt;  8 Gva     Ava     0.523  Gva:Ava  0.527   1.08</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a><span class="co">#&gt;  7 Ava     Sam     0.0850 Ava:Sam  0.0851  1.10</span></span>
+<span id="cb20-18"><a href="#cb20-18"></a><span class="co">#&gt;  8 Gva     Ava     0.523  Gva:Ava  0.526   1.08</span></span>
 <span id="cb20-19"><a href="#cb20-19"></a><span class="co">#&gt;  9 Gva     Gva     1      Gva:Gva  1       1   </span></span>
-<span id="cb20-20"><a href="#cb20-20"></a><span class="co">#&gt; 10 Gva     Lcr     0.0780 Gva:Lcr  0.0780  1.18</span></span>
+<span id="cb20-20"><a href="#cb20-20"></a><span class="co">#&gt; 10 Gva     Lcr     0.0780 Gva:Lcr  0.0778  1.18</span></span>
 <span id="cb20-21"><a href="#cb20-21"></a><span class="co">#&gt; # … with 39 more rows</span></span></code></pre></div>
 </div>
 <div id="evaluate-the-bias-estimate-visually" class="section level2">
 <h2 class="hasAnchor">
 <a href="#evaluate-the-bias-estimate-visually" class="anchor"></a>Evaluate the bias estimate visually</h2>
-<p>Plotting the bias estimate against the observed errors is useful to get a sense of the strength of bias versus noise in the control measurements were and how precisely the bias is estimated. When the control samples vary in their actual compositions, such plots can also allow us to confirm that the bias remains consistent across samples with different compositions. Since bias acts consistently on taxon ratios, and different control samples can have different taxa, we plot the error in the ratios for each pair of taxa over the samples where that pair was observed.</p>
+<p>Plotting the bias estimate against the observed errors is useful to get a sense of the strength of bias versus noise in the control measurements and how precisely the bias is estimated. When the control samples vary in their actual compositions, such plots can also allow us to confirm that the bias remains consistent across samples with different compositions. Since bias acts consistently on taxon ratios, and different control samples can have different taxa, we plot the error in the ratios for each pair of taxa over the samples where that pair was observed.</p>
 <p>First, we get a data frame with the observed errors using the <code><a href="../reference/compute_ratios.html">compute_ratios()</a></code> function, and a data frame with the predicted ratios from the pairwise bias estimates (with standard errors) we found earlier,</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>ratios &lt;-<span class="st"> </span>joint <span class="op">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="st">    </span>compute_ratios <span class="op">%&gt;%</span></span>

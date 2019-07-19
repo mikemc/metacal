@@ -3,9 +3,9 @@
 The metacal package provides tools for bias estimation and calibration in
 marker-gene and metagenomics sequencing experiments. It implements the methods
 described in [McLaren MR, Willis AD, Callahan BJ
-(2019)](https://www.biorxiv.org/content/10.1101/559831v1) and is used for the
+(2019)](https://www.biorxiv.org/content/10.1101/559831v2) and is used for the
 analysis associated with that manuscript, available at the [manuscript's
-repository](https://github.com/mikemc/2019-bias-manuscript).
+repository](https://github.com/mikemc/mgs-bias-manuscript).
 
 ## Installation
 
@@ -30,10 +30,10 @@ protocols.
 
 It is currently not possible to calibrate the composition of a natural
 community without making strong and untested assumptions about bias being the
-same for constructed and natural samples and about the efficiciencies of taxa
-not in the controls (e.g., approximating them by that of the closest relative
-or the average average efficiency). For this and other limitations described in
-the Discussion of our manuscript, calibration as a practical method to obtain
+same for constructed and natural samples and about the efficiencies of taxa not
+in the controls (e.g., approximating them by that of the closest relative or
+the average efficiency). For this and other limitations described in the
+Discussion of our manuscript, calibration as a practical method to obtain
 quantitatively accurate composition measurements is not currently feasible
 using this or any package. However, calibration using a hypothesized bias
 (perhaps partially informed by experimental measurement) can still be useful to
