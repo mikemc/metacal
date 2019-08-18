@@ -117,6 +117,14 @@ test_that("sampling rows or using `weights` gives an equal estimate", {
         center(d2, weights = w.rows, method = "rss"))
 })
 
+test_that("the center is correctly computed when sample and taxa names are missing", {
+    d2.no_names <- d2
+    rownames(d2.no_names) <- colnames(d2.no_names) <- NULL
+    c1 <- center(d2)
+    names(c1) <- NULL
+    c2 <- center(d2.no_names)
+    expect_equal(c1, c2)
+})
 
 # Additional tests to add
 # - Check various in scale and out scale combinations

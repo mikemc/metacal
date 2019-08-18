@@ -21,6 +21,13 @@ NULL
 #' @describeIn cooccurrence Adjacency matrix of the co-occurrence network
 #' @export
 cooccurrence_matrix <- function(mat, all = TRUE) {
+    # To compute the number of times each pair of taxa cooccur, we leverage the
+    # `compute_ratios()` function. Doing so requires that the samples (rows of
+    # `mat`) and the taxa (cols of `mat`) have names.
+    if (is.null(rownames(mat)))
+        rownames(mat) <- paste0("S", seq(nrow(mat)))
+    if (is.null(colnames(mat)))
+        colnames(mat) <- paste0("T", seq(ncol(mat)))
     ratios <- mat %>%
         tibble::as_tibble(rownames = "Sample") %>%
         tidyr::gather("Taxon", "Value", -Sample) %>%
