@@ -17,24 +17,27 @@
 #'
 #' Unobserved values should be marked as NaN. 
 #'
-#' @param .data - all-numeric data frame or matrix with taxa as columns
-#' @param weights - sample (row) weights
-#' @param method - "proj", "gm", or "rss"
-#' @param in_scale - "linear" (default) or "log"
-#' @param out_scale - "linear" (default) or "log"
-#' @param denom - Taxa to use in the denominator; if NULL, use all taxa.
-#' @param enframe - whether to return the bias estimate as a two-column tibble
+#' @param .data All-numeric data frame or matrix with taxa as columns.
+#' @param weights Sample (row) weights.
+#' @param method Method for computing the center: "proj", "gm", or "rss".
+#' @param in_scale "linear" or "log".
+#' @param out_scale "linear" or "log".
+#' @param denom Taxa to use in the denominator; if NULL, use all taxa.
+#' @param enframe Whether to return the bias estimate as a two-column tibble.
 #'
 #' @export
 center <- function(.data, weights = rep(1, nrow(.data)), method = "proj",
     in_scale = "linear", out_scale = "linear", denom = NULL, enframe = FALSE, 
     components = FALSE) {
-    if (!(in_scale %in% c("linear", "log")))
+    if (!(in_scale %in% c("linear", "log"))) {
         stop('`in_scale` must be "linear" or "log"')
+    }
     if (!(out_scale %in% c("linear", "log")))
         stop('`out_scale` must be "linear" or "log"')
     if (!(method %in% c("proj", "gm", "rss")))
         stop('`method` must be "proj", "gm", or "rss"')
+    if ( in_scale == "linear" & !all(.data > 0 | is.nan(.data)) )
+        stop('Elements of `.data` must be > 0 or NaN if `in_scale == "linear"`')
 
     # The log_center_*()'s require a matrix of log compositions
     mat <- .data %>% as("matrix")
@@ -103,8 +106,18 @@ log_center_gm <- function(mat, weights = rep(1, nrow(mat))) {
     clr_center
 }
 
-# Method from vandenBoogaart2006; also described in vandenBoogaart2013 and at
-# https://core.ac.uk/download/pdf/132548286.pdf (Bren2008)
+#' Compute the log center by the projection method
+#'
+#' Compute the log center by the projection method, which allows for missing
+#' observations.
+#'
+#' @references van den Boogaart KG, Tolosana-Delgado R, Bren M. 2006. Concepts
+#' for handling of zeros and missing values in compositional data. Proc IAMG
+#' 6:1-4. http://www.stat.boogaart.de/Publications/iamg06_s07_01.pdf
+#'
+#' @references Bren M, Tolosana-Delgado R, van den Boogaart KG. 2008. News from
+#' "compositions", the R package.
+#' https://core.ac.uk/download/pdf/132548286.pdf
 log_center_proj <- function(mat, weights = rep(1, nrow(mat))) {
 
     # Proper normalization appears to handled by the ginv matrix, so is
@@ -130,8 +143,10 @@ log_center_proj <- function(mat, weights = rep(1, nrow(mat))) {
     clr_center
 }
 
-#' @param bound - single number giving the lower and upper bound on the alr
-#'   efficiencies ("rss" only) 
+#' Compute the log center by numerical optimization
+#'
+#' @param bound Single number giving the lower and upper bound on the alr
+#'   efficiencies ("rss" only).
 log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 
     # This function computes the squared Aitchison norm of x on the
@@ -187,14 +202,15 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 
 #' Generate bootstrap replicates of the sample center
 #'
-#' @param .data - all-numeric data frame or matrix with taxa as columns
-#' @param R Number of bootstrap replicates
-#' @param N Number of trials for multinomial resampling
-#' @param method - "proj", "gm", or "rss"
-#' @param dist "dirichlet" or "multinomial" resampling
-#' @param in_scale - "linear" (default) or "log"
-#' @param out_scale - "linear" (default) or "log"
-#' @param denom - Taxa to use in the denominator; if NULL, use all taxa.
+#' @param .data All-numeric data frame or matrix with taxa as columns.
+#' @param R Number of bootstrap replicates.
+#' @param N Number of trials for multinomial resampling.
+#' @param method Method for computing the center: "proj", "gm", or "rss".
+#' @param dist Distribution for drawing the bootstrap weights: "dirichlet" or
+#'   "multinomial".
+#' @param in_scale "linear" (default) or "log"
+#' @param out_scale "linear" (default) or "log"
+#' @param denom Taxa to use in the denominator; if NULL, use all taxa.
 #'
 #' @export
 bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",

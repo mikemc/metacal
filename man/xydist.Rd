@@ -7,11 +7,11 @@
 xydist(x, y, method = "aitchison", trim = FALSE)
 }
 \arguments{
-\item{method}{: distance/dissimilarity measure}
+\item{method}{Distance/dissimilarity measure.}
 
-\item{trim}{: should x and y be reduced to their common positive elements
+\item{trim}{Should x and y be reduced to their common positive elements
 before computing the Aitchison distance (otherwise, the distance will be
-Inf)
+Inf).
 
 method == "aitchison" -> Aitchison distance
 method == "bray" -> Bray-Curtis dissimilarity between x and y. Note,

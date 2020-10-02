@@ -11,7 +11,7 @@ build_matrix(.data, rows, cols, elts, fill = NULL)
 
 \item{rows}{Column that will become the rownames of the matrix.}
 
-\item{cols}{Column that will become the rownames of the matrix.}
+\item{cols}{Column that will become the colnames of the matrix.}
 
 \item{elts}{Column that will become the matrix elements.}
 

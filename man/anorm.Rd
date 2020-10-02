@@ -7,7 +7,7 @@
 anorm(x, na.rm = FALSE)
 }
 \arguments{
-\item{na.rm;}{remove NAs and NaNs before calculating}
+\item{na.rm}{Whether to remove NAs and NaNs before calculating.}
 }
 \description{
 Aitchison norm of x

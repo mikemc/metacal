@@ -88,10 +88,10 @@ clr <- function(x, base = exp(1), na.rm = FALSE) {
 
 #' Distance or dissimilarity between relative abundance vectors x and y
 #'
-#' @param method : distance/dissimilarity measure
-#' @param trim : should x and y be reduced to their common positive elements
+#' @param method Distance/dissimilarity measure.
+#' @param trim Should x and y be reduced to their common positive elements
 #' before computing the Aitchison distance (otherwise, the distance will be
-#' Inf)
+#' Inf).
 #' 
 #' method == "aitchison" -> Aitchison distance
 #' method == "bray" -> Bray-Curtis dissimilarity between x and y. Note,
@@ -120,7 +120,7 @@ xydist <- function(x, y, method = "aitchison", trim = FALSE) {
 
 #' Aitchison norm of x
 #'
-#' @param na.rm; remove NAs and NaNs before calculating
+#' @param na.rm Whether to remove NAs and NaNs before calculating.
 #'
 #' @export
 anorm <- function (x, na.rm = FALSE) {

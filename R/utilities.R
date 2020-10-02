@@ -23,7 +23,7 @@ mutate_by <- function(.data, group_vars, ...) {
 #'
 #' @param .data A data frame with columns `rows`, `cols`, and `elts`.
 #' @param rows Column that will become the rownames of the matrix.
-#' @param cols Column that will become the rownames of the matrix.
+#' @param cols Column that will become the colnames of the matrix.
 #' @param elts Column that will become the matrix elements.
 #' @param fill Value to use for missing elements.
 #' @export
