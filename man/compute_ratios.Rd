@@ -4,9 +4,12 @@
 \alias{compute_ratios}
 \title{Compute taxon ratios from a tidy data frame}
 \usage{
-compute_ratios(.data, group_vars = c("Sample"),
-  comp_vars = setdiff(names(dplyr::select_if(.data, is.numeric)),
-  group_vars), drop = TRUE)
+compute_ratios(
+  .data,
+  group_vars = c("Sample"),
+  comp_vars = setdiff(names(dplyr::select_if(.data, is.numeric)), group_vars),
+  drop = TRUE
+)
 }
 \arguments{
 \item{drop}{Whether to drop the individual taxon quantities}

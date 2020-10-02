@@ -40,53 +40,190 @@ compute_ratios <- function(.data,
     tb
 }
 
-# Experimental ----------------------------------------------------------------
-# These are experimental and so not exported right now
+# Pairwise ratio vectors and matrices -----------------------------------------
 
-#' Pairwise ratios of the elements of x
+#' Pairwise ratios of vector elements and matrix rows or columns
 #'
-pw_ratios <- function (x) {
-    if (is.null(names(x))) 
-        names(x) <- seq(x)
-    tb <- tidyr::crossing(i = names(x), j = names(x)) %>%
-        dplyr::mutate(Name = paste(i, j, sep = ":"))
-    v <- purrr::map2_dbl(tb$i, tb$j, ~ x[.x] / x[.y])
-    names(v) <- tb$Name
-    v
+#' For a matrix, computes the ratios of the supplied margin (1 = rows, 2 =
+#' cols). Otherwise, computes the ratios of the elements.
+#' 
+#' @param x A vector or matrix
+#' @param margin Margin (1 = rows, 2 = cols) of matrix x to compute ratios of
+#' @param f Vectorized binary function applied to numerator and denominator
+#' @param filter Whether to filter out redundant pairs
+#' @param set_names Whether to set names for the pairs
+#' @param sep Seperator for pair names
+#'
+#' @name pairwise_ratios
+#' @export
+#' @examples
+#'   mat <- seq(10) %>%
+#'     matrix(nrow = 2)
+#'   rownames(mat) <- paste0('r', seq(2))
+#'   colnames(mat) <- paste0('c', seq(5))
+#'   
+#'   pairwise_ratios(mat, 2)
+#'   pairwise_ratios(mat[1,])
+pairwise_ratios <- function(x, 
+                            ..., 
+                            f = `/`, 
+                            filter = TRUE, 
+                            set_names = TRUE, 
+                            sep = ":") {
+  UseMethod("pairwise_ratios")
 }
 
-# Turn a matrix of compositional data into a tidy data frame of ratio
-# observations
+setGeneric("pairwise_ratios")
 
-#' Pairwise ratios of taxa from matrix of multiple samples
-#'
-pw_ratios_matrix <- function (x, na.rm = FALSE) {
-    if (is.null(colnames(x))) 
-        colnames(x) <- seq(x)
-    tb <- tidyr::crossing(i = colnames(x), j = colnames(x)) %>%
-        dplyr::mutate(Name = paste(i, j, sep = ":"))
-    v <- purrr::map2(tb$i, tb$j, ~ x[,.x] / x[,.y])
-    names(v) <- tb$Name
-    # v
-    # tidy df
-    tb <- purrr::map(v, tibble::enframe, "Sample", "Ratio") %>%
-        dplyr::bind_rows(.id = "Pair")
-    if (na.rm) {
-        tb <- dplyr::filter(tb, !is.na(Ratio))
-    }
-    tb
+#' @rdname pairwise_ratios
+pairwise_ratios.default <- function(x,
+                                    f = `/`, 
+                                    filter = TRUE, 
+                                    set_names = TRUE, 
+                                    sep = ":") {
+  idx <- seq_along(x)
+  tb <- tidyr::crossing(i = idx, j = idx)
+  if (filter)
+    tb <- tb %>% dplyr::filter(i < j)
+  ratios <- purrr::pmap_dbl(tb, function(i, j) f(x[i], x[j]))
+  if (set_names) {
+    nms <- names(x)
+    if (is.null(nms)) 
+      nms <- idx
+    names(ratios) <- purrr::pmap_chr(
+      tb, 
+      function(i, j) paste(nms[i], nms[j], sep = sep)
+    )
+  }
+  ratios
+}
+# NOTE: Could also be done with `outer(x, x, `/`) %>% as.vector`, but this way
+# is ~20x faster and easily extends to work with matrices
+
+#' @rdname pairwise_ratios
+pairwise_ratios.matrix <- function(x, 
+                                   margin, 
+                                   f = `/`, 
+                                   filter = TRUE, 
+                                   set_names = TRUE, 
+                                   sep = ":") {
+  idx <- seq(dim(x)[[margin]])
+  tb <- tidyr::crossing(i = idx, j = idx)
+  if (filter)
+    tb <- tb %>% dplyr::filter(i < j)
+  if (margin == 1) {
+    ratios <- purrr::pmap(tb, function(i, j) f(x[i,], x[j,]))
+    ratio_mat <- do.call(rbind, ratios)
+  } else if (margin == 2) {
+    ratios <- purrr::pmap(tb, function(i, j) f(x[,i], x[,j]))
+    ratio_mat <- do.call(cbind, ratios)
+  } else
+    stop("margin must be 1 or 2")
+  if (set_names) {
+    nms <- dimnames(x)[[margin]]
+    if (is.null(nms)) 
+      nms <- idx
+    dimnames(ratio_mat)[[margin]] <- purrr::pmap_chr(
+      tb, 
+      function(i, j) paste(nms[i], nms[j], sep = sep)
+    )
+  }
+  ratio_mat
 }
 
-#' Ratio matrix
-#'
-ratio_matrix <- function (x, diag = TRUE, upper = TRUE) {
-    K <- length(x)
-    mat <- matrix(x, nrow = K, ncol = K) / 
-        matrix(x, nrow = K, ncol = K, byrow = TRUE)
-    rownames(mat) <- colnames(mat) <- names(x)
-    if (!diag) 
-        diag(mat) <- NA
-    if (!upper) 
-        upper.tri(mat) <- NA
-    mat
+# Version that works with phyloseq otu_table objects
+# TODO: check that phyloseq is installed and throw and error if not
+
+#' @importClassesFrom phyloseq otu_table
+#' @rdname pairwise_ratios
+pairwise_ratios.otu_table <- function(x, 
+                                      margin = "taxa", 
+                                      f = `/`, 
+                                      filter = TRUE, 
+                                      sep = ":") {
+  if (!requireNamespace("phyloseq", quietly = TRUE))
+    stop("Phyloseq package required for this function")
+  stopifnot(margin %in% c("taxa", "samples"))
+  taxa_are_rows <- phyloseq::taxa_are_rows(x)
+  xmat <- as(x, "matrix")
+  # Ensure that taxa/features are columns
+  if (taxa_are_rows)
+    xmat <- t(xmat)
+  # Compute ratios of taxa (default) or of samples
+  if (margin == "taxa") {
+    mat_margin <- 2
+  } else if (margin == "samples") {
+    mat_margin <- 1
+  }
+  ratios <- pairwise_ratios.matrix(
+    xmat,
+    mat_margin,
+    f = f,
+    filter = filter,
+    set_names = TRUE,
+    sep = sep
+  )
+  # Return as an otu_table in original orientation
+  if (taxa_are_rows)
+    ratios <- t(ratios)
+  phyloseq::otu_table(ratios, taxa_are_rows)
 }
+
+setMethod("pairwise_ratios", "otu_table", pairwise_ratios.otu_table)
+
+#' @importClassesFrom phyloseq phyloseq
+#' @rdname pairwise_ratios
+pairwise_ratios.phyloseq <- function(x, 
+                                     margin = "taxa", 
+                                     f = `/`, 
+                                     filter = TRUE, 
+                                     sep = ":") {
+  if (!requireNamespace("phyloseq", quietly = TRUE))
+    stop("Phyloseq package required for this function")
+  # New otu table
+  new_otu <- pairwise_ratios.otu_table(
+    phyloseq::otu_table(x), 
+    margin = margin,
+    f = f,
+    filter = filter,
+    sep = sep
+  )
+  if (margin == "taxa") {
+    return(phyloseq::phyloseq(new_otu, phyloseq::sample_data(x)))
+  }
+  # New sample data needed when margin = "samples". In this case, should have
+  # columns "sample.1" and "sample.2" and the data for both.
+  if (margin == "samples") {
+    sam <- phyloseq::sample_data(x)
+    samtb <- sam %>%
+      as("data.frame") %>%
+      tibble::as_tibble(rownames = "sample")
+    tb <- tidyr::crossing(
+      sample.1 = phyloseq::sample_names(x),
+      sample.2 = phyloseq::sample_names(x)
+      )
+    tb <- tb %>%
+      dplyr::left_join(samtb, by = c(sample.1 = "sample")) %>%
+      dplyr::left_join(samtb, by = c(sample.2 = "sample"), 
+        suffix = c(".1", ".2")) %>%
+      dplyr::mutate(pair = paste(sample.1, sample.2, sep = sep))
+    new_sam <- tb %>%
+      tibble::column_to_rownames("pair") %>%
+      phyloseq::sample_data()
+    # Call to phyloseq() will filter sample pairs that are missing in new_otu
+    # if `filter == TRUE`
+    return(phyloseq::phyloseq(new_otu, new_sam))
+  }
+}
+# TODO: check that this method of filtering samples is ok; and see which order
+# they end up in. Might instead do to exactly match the otu_table order
+#
+
+setMethod("pairwise_ratios", "phyloseq", pairwise_ratios.phyloseq)
+
+# TODO: preserve taxonomy and refseq information?
+
+# idx <- seq(dim(x)[[margin]])
+# tb <- tidyr::crossing(i = idx, j = idx)
+# if (filter)
+#   tb <- tb %>% dplyr::filter(i < j)
