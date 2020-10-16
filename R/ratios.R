@@ -134,7 +134,6 @@ pairwise_ratios.matrix <- function(x,
 # Version that works with phyloseq otu_table objects
 # TODO: check that phyloseq is installed and throw and error if not
 
-#' @importClassesFrom phyloseq otu_table
 #' @rdname pairwise_ratios
 pairwise_ratios.otu_table <- function(x, 
                                       margin = "taxa", 
