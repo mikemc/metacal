@@ -27,7 +27,13 @@ same samples and taxa in \code{observed}}
 \code{1} for rows, \code{2} for columns}
 }
 \description{
-Estimate bias from control measurements
+Estimate bias using the compositional least-squares approach described in
+McLaren, Willis, and Callahan (2019).
+}
+\details{
+Name requirements for \code{observed} and \code{actual}: The row and column names (for
+matrices) or taxa and sample names (for phyloseq objects) must match, but
+can be in different orders.
 }
 \seealso{
 \code{\link[=center]{center()}} \code{\link[=calibrate]{calibrate()}}

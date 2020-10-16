@@ -40,4 +40,10 @@ options specified by the \code{norm} argument are
 \code{w * sum(v) / sum(w)}
 \item "none" Return \code{w} without any normalization
 }
+
+If \code{y} is named, then the names must agree with the feature (taxa) names in
+\code{x} and will be used to reorder \code{y} to match the feature order in \code{x}.
+}
+\seealso{
+\code{\link[=calibrate]{calibrate()}}
 }

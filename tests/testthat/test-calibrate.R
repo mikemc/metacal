@@ -40,6 +40,12 @@ test_that("`calibrate()` and `perturb()` are inverse operations", {
     otu,
     otu %>% perturb(y, norm = "none") %>% calibrate(y, norm = "none")
   )
+  # Should also work if y is named and has a different order
+  y1 <- rlang::set_names(y, taxa_names(otu)) %>% rev
+  expect_equal(
+    otu,
+    otu %>% perturb(y1, norm = "none") %>% calibrate(y, norm = "none")
+  )
 })
 
 test_that("`calibrate()` (and `perturb()`) normalizations work", {

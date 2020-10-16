@@ -14,12 +14,17 @@
 #'   `w * sum(v) / sum(w)`
 #' * "none" Return `w` without any normalization
 #'
+#' If `y` is named, then the names must agree with the feature (taxa) names in
+#' `x` and will be used to reorder `y` to match the feature order in `x`.
+#'
 #' @param x An abundance matrix or phyloseq object containing one
 #' @param y A numeric vector with which to perturb the observations in x
 #' @param margin Matrix margin that corresponds to observations (samples); 
 #'   `1` for rows, `2` for columns
 #' @param norm String specifying how to normalize the perturbed observations;
 #'   see Details.
+#'
+#' @seealso [calibrate()]
 #' 
 #' @rdname perturb
 #' @export
@@ -31,10 +36,16 @@ perturb <- function(x, y, ...) {
 #' @method perturb matrix
 #' @export
 perturb.matrix <- function(x, y, margin, norm = "close") {
-  if (!is.null(names(y)) & !identical(rownames(x), names(y)))
-    stop("`rownames(x)` and `names(y)` do not match")
   stopifnot(margin %in% 1:2)
   stopifnot(norm %in% c("close", "keep", "none"))
+  stopifnot(identical(dim(x)[[margin]], length(y)))
+
+  # Align features (taxa)
+  if (!is.null(names(y))) {
+    if (!setequal(dimnames(x)[[margin]], names(y)))
+      stop("Feature names in `x` and `y` do not match")
+    y <- y[dimnames(x)[[margin]]]
+  }
 
   if (margin == 1) {
     z <- diag(y) %*% x
@@ -59,9 +70,6 @@ perturb.matrix <- function(x, y, margin, norm = "close") {
 #' @method perturb otu_table
 #' @export
 perturb.otu_table <- function(x, y, norm = "close") {
-  if (!is.null(names(y)) & !identical(taxa_names(x), names(y)))
-    stop("`taxa_names(x)` and `names(y)` do not match")
-
   margin <- 2 - taxa_are_rows(x)
   z <- perturb.matrix(as(x, "matrix"), y, margin = margin, norm = norm)
   otu_table(z, taxa_are_rows = taxa_are_rows(x))
@@ -95,6 +103,10 @@ setMethod("perturb", c("phyloseq", "numeric"), perturb.phyloseq)
 #' * "keep": Keep the same total abundance as the original observation
 #' * "none": Return the calibrated abundances without any normalization
 #'
+#' If `bias` is named, then the names must agree with the feature (taxa) names
+#' in `observed` and will be used to reorder `bias` to match the feature order
+#' in `observed`.
+#'
 #' @param observed An abundance matrix or phyloseq object containing one
 #' @param bias A numeric vector of relative efficiencies
 #' @param margin Matrix margin that corresponds to observations (samples); 
@@ -102,7 +114,7 @@ setMethod("perturb", c("phyloseq", "numeric"), perturb.phyloseq)
 #' @param norm String specifying how to normalize the calibrated observations;
 #'   see Details.
 #' 
-#' @seealso [perturb()]
+#' @seealso [perturb()] [estimate_bias()]
 #' 
 #' @rdname calibrate
 #' @export

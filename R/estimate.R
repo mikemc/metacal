@@ -1,5 +1,12 @@
 #' Estimate bias from control measurements
 #'
+#' Estimate bias using the compositional least-squares approach described in
+#' McLaren, Willis, and Callahan (2019).
+#'
+#' Name requirements for `observed` and `actual`: The row and column names (for
+#' matrices) or taxa and sample names (for phyloseq objects) must match, but
+#' can be in different orders.
+#'
 #' @param observed Abundance matrix of observed compositions
 #' @param actual Abundance matrix of actual or reference compositions for the
 #'   same samples and taxa in `observed`
@@ -21,10 +28,12 @@ estimate_bias <- function(observed, actual, ...) {
 estimate_bias.matrix <- function(observed, actual, margin, ...) {
   stopifnot(margin %in% 1:2)
   stopifnot(identical(dim(observed), dim(actual)))
-  # Check names are identical if they exist
-  stopifnot(identical(rownames(observed), rownames(actual)))
-  stopifnot(identical(colnames(observed), colnames(actual)))
-  
+
+  # Align samples and features (taxa)
+  stopifnot(setequal(rownames(observed), rownames(actual)))
+  stopifnot(setequal(colnames(observed), colnames(actual)))
+  observed <- observed[rownames(actual), colnames(actual)]
+
   error <- observed / actual
   # `center()` requires `error` is oriented with samples as rows
   if (margin == 2) 
@@ -39,10 +48,13 @@ estimate_bias.otu_table <- function(observed, actual, ...) {
   stopifnot(setequal(taxa_names(observed), taxa_names(actual)))
   stopifnot(setequal(sample_names(observed), sample_names(actual)))
 
-  # Make sure samples are rows, and samples and taxa are aligned in both tables
+  # Orient both tables with samples as rows before passing to matrix method,
+  # which will adjust row and column order.
   if (taxa_are_rows(observed)) observed <- t(observed)
   if (taxa_are_rows(actual)) actual <- t(actual)
-  observed <- observed[sample_names(actual), taxa_names(actual)]
+  # Note: In the case where both are oriented with taxa as rows, we could
+  # reduce the total number of transpose operations by 1 by keeping the
+  # original orientation
 
   estimate_bias.matrix(
     as(observed, "matrix"), 
