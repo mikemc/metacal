@@ -3,7 +3,7 @@
 The metacal package provides tools for bias estimation and calibration in
 marker-gene and metagenomics sequencing experiments. It implements the methods
 described in [McLaren MR, Willis AD, Callahan BJ
-(2019)](https://www.biorxiv.org/content/10.1101/559831v2) and is used for the
+(2019)](https://elifesciences.org/articles/46923) and is used for the
 analysis associated with that manuscript, available at the [manuscript's
 repository](https://github.com/mikemc/mgs-bias-manuscript).
 

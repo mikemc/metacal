@@ -1,6 +1,6 @@
 Package: metacal
 Title: Bias estimation and calibration for metagenomics experiments
-Version: 0.1.0.9002
+Version: 0.1.0.9003
 Authors@R: 
     person(given = "Michael",
            family = "McLaren",
@@ -8,8 +8,9 @@ Authors@R:
            email = "m.mclaren42@gmail.com",
            comment = c(ORCID = "0000-0003-1575-473X"))
 Description: The metacal package provides tools for bias estimation and
-    calibration in marker-gene and metagenomics sequencing experiments.
-URL: https://github.com/mikemc/metacal
+    calibration in marker-gene and metagenomics sequencing experiments, using
+    the methods developed in https://elifesciences.org/articles/46923.
+URL: https://mikemc.github.io/metacal, https://github.com/mikemc/metacal
 BugReports: https://github.com/mikemc/metacal/issues
 License: MIT + file LICENSE
 Imports:
