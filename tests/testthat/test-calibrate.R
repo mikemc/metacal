@@ -7,8 +7,8 @@
 
 test_xy <- function(n_taxa, n_samples) {
   set.seed(42)
-  # random abundance matrix
-  x <- sample(100, n_taxa*n_samples, replace = TRUE) %>% 
+  # random abundance matrix with zeros
+  x <- sample(0:5, n_taxa*n_samples, replace = TRUE) %>% 
     matrix(nrow = n_taxa)
   rownames(x) <- paste0("t", seq(n_taxa))
   colnames(x) <- paste0("s", seq(n_samples))
@@ -33,6 +33,12 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
 
   expect_equal(bias, estimate_bias(observed, actual))
   expect_equal(bias, estimate_bias(observed, actual %>% t))
+
+  # non-zero values is observed that are zero in actual should be automatically
+  # zeroed with a message
+  observed <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
+  expect_message(bhat <- estimate_bias(observed, actual))
+  expect_equal(bias, bhat)
 })
 
 test_that("`calibrate()` and `perturb()` are inverse operations", {

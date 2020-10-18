@@ -1,6 +1,6 @@
 Package: metacal
 Title: Bias estimation and calibration for metagenomics experiments
-Version: 0.1.0.9004
+Version: 0.1.0.9005
 Authors@R: 
     person(given = "Michael",
            family = "McLaren",

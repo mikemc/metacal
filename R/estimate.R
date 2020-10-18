@@ -3,6 +3,13 @@
 #' Estimate bias using the compositional least-squares approach described in
 #' McLaren, Willis, and Callahan (2019).
 #'
+#' Bias is estimated by applying [center()] to the compositional error matrix
+#' defined by `observed/actual`, which requires that `observed` and `actual`
+#' are non-zero for the same sample-feature pairs. For convenience, this
+#' function will automatically set values in `observed` to 0 whose
+#' corresponding entries are 0 in `actual`, but it is up to you to replace 0
+#' values in `observed` with a non-zero value (such as a pseudocount).
+#'
 #' Name requirements for `observed` and `actual`: The row and column names (for
 #' matrices) or taxa and sample names (for phyloseq objects) must match, but
 #' can be in different orders.
@@ -33,6 +40,12 @@ estimate_bias.matrix <- function(observed, actual, margin, ...) {
   stopifnot(setequal(rownames(observed), rownames(actual)))
   stopifnot(setequal(colnames(observed), colnames(actual)))
   observed <- observed[rownames(actual), colnames(actual)]
+
+  n <- sum(observed[actual == 0] > 0)
+  if (n > 0) {
+    message(paste("Zeroing", n, "values in `observed`"))
+    observed[actual == 0] <- 0
+  }
 
   error <- observed / actual
   # `center()` requires `error` is oriented with samples as rows

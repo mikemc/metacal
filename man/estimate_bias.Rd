@@ -31,6 +31,13 @@ Estimate bias using the compositional least-squares approach described in
 McLaren, Willis, and Callahan (2019).
 }
 \details{
+Bias is estimated by applying \code{\link[=center]{center()}} to the compositional error matrix
+defined by \code{observed/actual}, which requires that \code{observed} and \code{actual}
+are non-zero for the same sample-feature pairs. For convenience, this
+function will automatically set values in \code{observed} to 0 whose
+corresponding entries are 0 in \code{actual}, but it is up to you to replace 0
+values in \code{observed} with a non-zero value (such as a pseudocount).
+
 Name requirements for \code{observed} and \code{actual}: The row and column names (for
 matrices) or taxa and sample names (for phyloseq objects) must match, but
 can be in different orders.
