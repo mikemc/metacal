@@ -14,12 +14,14 @@
 #' matrices) or taxa and sample names (for phyloseq objects) must match, but
 #' can be in different orders.
 #'
-#' @param observed Abundance matrix of observed compositions
+#' @param observed Abundance matrix of observed compositions..
 #' @param actual Abundance matrix of actual or reference compositions for the
-#'   same samples and taxa in `observed`
+#'   same samples and taxa in `observed`.
 #' @param margin Matrix margin that corresponds to observations (samples); 
-#'   `1` for rows, `2` for columns
-#' @param ... Arguments passed to methods.
+#'   `1` for rows, `2` for columns.
+#' @param ... Arguments passed to the matrix method.
+#' @param boot Whether to perform bootstrapping.
+#' @param times Number of bootstrap replicates.
 #'
 #' @return A `mc_bias_fit` object with [coef()], [fitted()], and [residuals()]
 #'   methods.
@@ -35,7 +37,11 @@ estimate_bias <- function(observed, actual, ...) {
 #' @rdname estimate_bias
 #' @method estimate_bias matrix
 #' @export
-estimate_bias.matrix <- function(observed, actual, margin, ...) {
+estimate_bias.matrix <- function(observed, 
+                                 actual, 
+                                 margin, 
+                                 boot = FALSE, 
+                                 times = 1000) {
   stopifnot(margin %in% 1:2)
   stopifnot(identical(dim(observed), dim(actual)))
 
@@ -55,13 +61,20 @@ estimate_bias.matrix <- function(observed, actual, margin, ...) {
     observed[actual == 0] <- 0
   }
 
-  estimate <- center(observed / actual)
+  error <- observed / actual
+  estimate <- center(error)
+
+  if (boot)
+    bootreps <- bootrep_center(error, R = times)
+  else 
+    bootreps <- NULL
 
   structure(class = "mc_bias_fit",
     list(
-      estimate = estimate,
       observed = observed,
-      actual = actual
+      actual = actual,
+      estimate = estimate,
+      bootreps = bootreps
     )
   )
 }
@@ -81,7 +94,7 @@ estimate_bias.otu_table <- function(observed, actual, ...) {
   estimate_bias.matrix(
     as(observed, "matrix"), 
     as(actual, "matrix"),
-    margin = 1, 
+    margin = 1,
     ...
   )
 }

@@ -12,7 +12,8 @@ bootrep_center(
   dist = "dirichlet",
   in_scale = "linear",
   out_scale = "linear",
-  denom = NULL
+  denom = NULL,
+  enframe = FALSE
 )
 }
 \arguments{
@@ -27,11 +28,13 @@ bootrep_center(
 \item{dist}{Distribution for drawing the bootstrap weights: "dirichlet" or
 "multinomial".}
 
-\item{in_scale}{"linear" (default) or "log"}
+\item{in_scale}{"linear" (default) or "log".}
 
-\item{out_scale}{"linear" (default) or "log"}
+\item{out_scale}{"linear" (default) or "log".}
 
 \item{denom}{Taxa to use in the denominator; if NULL, use all taxa.}
+
+\item{enframe}{Whether to "enframe" the bootstrap estimates in a tibble.}
 }
 \description{
 Generate bootstrap replicates of the sample center

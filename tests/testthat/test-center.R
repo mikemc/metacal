@@ -131,3 +131,12 @@ test_that("the center is correctly computed when sample and taxa names are missi
 # - Check behavior in the exp3 case (bias not fully defined)
 # - Check that the projection method gives the right answer in the
 #   deterministic missing observations case
+
+test_that("`bootrep_center()` output format", {
+  bootreps <- bootrep_center(d2, R = 5, enframe = FALSE)
+  bootreps.tb <- bootrep_center(d2, R = 5, enframe = TRUE)
+  expect_identical(colnames(bootreps), colnames(bootreps))
+  expect_identical(nrow(bootreps), 5L)
+  expect_true(is.matrix(bootreps))
+  expect_s3_class(bootreps.tb, "tbl_df")
+})

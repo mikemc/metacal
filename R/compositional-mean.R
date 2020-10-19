@@ -208,14 +208,15 @@ log_center_rss <- function(mat, weights = rep(1, nrow(mat)), bound = 10) {
 #' @param method Method for computing the center: "proj", "gm", or "rss".
 #' @param dist Distribution for drawing the bootstrap weights: "dirichlet" or
 #'   "multinomial".
-#' @param in_scale "linear" (default) or "log"
-#' @param out_scale "linear" (default) or "log"
+#' @param in_scale "linear" (default) or "log".
+#' @param out_scale "linear" (default) or "log".
 #' @param denom Taxa to use in the denominator; if NULL, use all taxa.
+#' @param enframe Whether to "enframe" the bootstrap estimates in a tibble.
 #'
 #' @export
 bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
     dist = "dirichlet", in_scale = "linear", out_scale = "linear",
-    denom = NULL) {
+    denom = NULL, enframe = FALSE) {
 
     if (!(dist %in% c("multinomial", "dirichlet")))
         stop('`dist` must be "multinomial" or "dirichlet"')
@@ -259,15 +260,25 @@ bootrep_center <- function(.data, R = 4000, N = nrow(.data), method = "proj",
     }
     # Compute Bhat for each bootstrap replicate
     reps <- purrr::map(wlist, log_center, mat = mat)
+
+    # TODO: Set the denominator in the matix with sweep()
     # Set the denominator
     if (!is.null(denom))
         reps <- purrr::map(reps, ~ . - mean(.[denom]))
-    # Join into a single data frame
-    reps <- purrr::map_dfr(reps, tibble::enframe, "Taxon", "Center", 
-        .id = ".id")
+
+    # Combine into a matrix with taxa as columns
+    reps <- do.call(rbind, reps)
 
     if (out_scale == "linear")
-        reps <- dplyr::mutate(reps, Center = exp(Center))
+        reps <- exp(reps)
+
+    if (enframe) {
+      # Join into a single data frame
+      reps <- reps %>%
+        tibble::as_tibble() %>%
+        tibble::rowid_to_column(var = ".id") %>%
+        tidyr::pivot_longer(-.id, names_to = "Taxon", values_to = "Center")
+    }
 
     reps
 }

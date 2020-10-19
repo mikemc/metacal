@@ -9,22 +9,26 @@
 \usage{
 estimate_bias(observed, actual, ...)
 
-\method{estimate_bias}{matrix}(observed, actual, margin, ...)
+\method{estimate_bias}{matrix}(observed, actual, margin, boot = FALSE, times = 1000)
 
 \method{estimate_bias}{otu_table}(observed, actual, ...)
 
 \method{estimate_bias}{phyloseq}(observed, actual, ...)
 }
 \arguments{
-\item{observed}{Abundance matrix of observed compositions}
+\item{observed}{Abundance matrix of observed compositions..}
 
 \item{actual}{Abundance matrix of actual or reference compositions for the
-same samples and taxa in \code{observed}}
+same samples and taxa in \code{observed}.}
 
-\item{...}{Arguments passed to methods.}
+\item{...}{Arguments passed to the matrix method.}
 
 \item{margin}{Matrix margin that corresponds to observations (samples);
-\code{1} for rows, \code{2} for columns}
+\code{1} for rows, \code{2} for columns.}
+
+\item{boot}{Whether to perform bootstrapping.}
+
+\item{times}{Number of bootstrap replicates.}
 }
 \value{
 A \code{mc_bias_fit} object with \code{\link[=coef]{coef()}}, \code{\link[=fitted]{fitted()}}, and \code{\link[=residuals]{residuals()}}
