@@ -23,8 +23,8 @@
 #' @param boot Whether to perform bootstrapping.
 #' @param times Number of bootstrap replicates.
 #'
-#' @return A `mc_bias_fit` object with [coef()], [fitted()], and [residuals()]
-#'   methods.
+#' @return A `mc_bias_fit` object with [coef()], [fitted()], [residuals()], and
+#'   [summary()] methods.
 #' 
 #' @seealso [center()] [calibrate()] 
 #' 
@@ -132,4 +132,59 @@ residuals.mc_bias_fit <- function(object) {
 #' @export
 coef.mc_bias_fit <- function(object) {
   object$estimate
+}
+
+#' @export
+print.mc_bias_fit <- function(x) {
+  cat('A metacal bias fit.', fill = TRUE)
+  cat(fill = TRUE)
+  cat('Estimated relative efficiencies:', fill = TRUE)
+  print(x$estimate)
+  if (!is.null(x$bootreps)) {
+    cat(fill = TRUE)
+    cat('Contains', nrow(x$bootreps), 'bootstrap replicates.', fill = TRUE)
+  }
+  invisible(x)
+}
+
+#' @export
+summary.mc_bias_fit <- function(object) {
+  s <- structure(list(), class = "mc_bias_fit_summary")
+
+  # If no taxon names, use the integer index
+  taxon_names <- names(object$estimate)
+  if (is.null(taxon_names))
+    taxon_names <- seq_along(object$estimate)
+
+  # Create a tibble with the estimated coefficients, with means and standard
+  # errors from the bootreps (if they exist)
+  s$coefficients <- tibble::tibble(
+    taxon = taxon_names,
+    estimate = object$estimate,
+  )
+  if (!is.null(object$bootreps)) {
+    s$coefficients <- s$coefficients %>% 
+      tibble::add_column(
+        gm_mean = object$bootreps %>% apply(2, gm_mean),
+        gm_se = object$bootreps %>% apply(2, gm_sd)
+      )
+    s$n_bootreps <- nrow(object$bootreps)
+  }
+
+  s
+}
+
+#' @export
+print.mc_bias_fit_summary <- function(x) {
+  cat('Summary of a metacal bias fit.', fill = TRUE)
+  cat(fill = TRUE)
+  cat('Estimated relative efficiencies:', fill = TRUE)
+  print(x$coefficients)
+  if (!is.null(x$n_bootreps)) {
+    cat(fill = TRUE)
+    cat('Geometric standard error estimated from', x$n_bootreps, 
+      'bootstrap replicates.', 
+      fill = TRUE)
+  }
+  invisible(x)
 }

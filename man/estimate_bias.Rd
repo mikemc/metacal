@@ -31,8 +31,8 @@ same samples and taxa in \code{observed}.}
 \item{times}{Number of bootstrap replicates.}
 }
 \value{
-A \code{mc_bias_fit} object with \code{\link[=coef]{coef()}}, \code{\link[=fitted]{fitted()}}, and \code{\link[=residuals]{residuals()}}
-methods.
+A \code{mc_bias_fit} object with \code{\link[=coef]{coef()}}, \code{\link[=fitted]{fitted()}}, \code{\link[=residuals]{residuals()}}, and
+\code{\link[=summary]{summary()}} methods.
 }
 \description{
 Estimate bias using the compositional least-squares approach described in
