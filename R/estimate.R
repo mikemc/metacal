@@ -19,7 +19,10 @@
 #'   same samples and taxa in `observed`
 #' @param margin Matrix margin that corresponds to observations (samples); 
 #'   `1` for rows, `2` for columns
-#' @param ... Arguments passed to [center()]
+#' @param ... Arguments passed to methods.
+#'
+#' @return A `mc_bias_fit` object with [coef()], [fitted()], and [residuals()]
+#'   methods.
 #' 
 #' @seealso [center()] [calibrate()] 
 #' 
@@ -40,18 +43,27 @@ estimate_bias.matrix <- function(observed, actual, margin, ...) {
   stopifnot(setequal(rownames(observed), rownames(actual)))
   stopifnot(setequal(colnames(observed), colnames(actual)))
   observed <- observed[rownames(actual), colnames(actual)]
-
+  # Standardize on samples as rows
+  if (margin == 2) {
+    observed <- t(observed)
+    actual <- t(actual)
+  }
+  # Handle spurious non-zero observations
   n <- sum(observed[actual == 0] > 0)
   if (n > 0) {
     message(paste("Zeroing", n, "values in `observed`"))
     observed[actual == 0] <- 0
   }
 
-  error <- observed / actual
-  # `center()` requires `error` is oriented with samples as rows
-  if (margin == 2) 
-    error <- t(error)
-  center(error, ...)
+  estimate <- center(observed / actual)
+
+  structure(class = "mc_bias_fit",
+    list(
+      estimate = estimate,
+      observed = observed,
+      actual = actual
+    )
+  )
 }
 
 #' @rdname estimate_bias
@@ -65,9 +77,6 @@ estimate_bias.otu_table <- function(observed, actual, ...) {
   # which will adjust row and column order.
   if (taxa_are_rows(observed)) observed <- t(observed)
   if (taxa_are_rows(actual)) actual <- t(actual)
-  # Note: In the case where both are oriented with taxa as rows, we could
-  # reduce the total number of transpose operations by 1 by keeping the
-  # original orientation
 
   estimate_bias.matrix(
     as(observed, "matrix"), 
@@ -89,3 +98,25 @@ setMethod("estimate_bias", c("otu_table", "otu_table"), estimate_bias.otu_table)
 setMethod("estimate_bias", c("phyloseq", "phyloseq"), estimate_bias.phyloseq)
 setMethod("estimate_bias", c("otu_table", "phyloseq"), estimate_bias.phyloseq)
 setMethod("estimate_bias", c("phyloseq", "otu_table"), estimate_bias.phyloseq)
+
+#' @export
+fitted.mc_bias_fit <- function(object) {
+  # TODO: give a norm "keep" option that keeps the totals in _observed_
+  # Or, could be a "scale" param with a "counts" or "original" or "observed"
+  # option
+  perturb(object$actual, object$estimate, margin = 1, norm = "close")
+}
+
+#' @export
+residuals.mc_bias_fit <- function(object) {
+  # For now, give residuals on the proportion scale; in future, give options
+  # for other types.
+  observed <- object$observed %>% sweep(., 1, rowSums(.), `/`)
+  fitted <- fitted(object)
+  observed - fitted
+}
+
+#' @export
+coef.mc_bias_fit <- function(object) {
+  object$estimate
+}

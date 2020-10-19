@@ -21,10 +21,14 @@ estimate_bias(observed, actual, ...)
 \item{actual}{Abundance matrix of actual or reference compositions for the
 same samples and taxa in \code{observed}}
 
-\item{...}{Arguments passed to \code{\link[=center]{center()}}}
+\item{...}{Arguments passed to methods.}
 
 \item{margin}{Matrix margin that corresponds to observations (samples);
 \code{1} for rows, \code{2} for columns}
+}
+\value{
+A \code{mc_bias_fit} object with \code{\link[=coef]{coef()}}, \code{\link[=fitted]{fitted()}}, and \code{\link[=residuals]{residuals()}}
+methods.
 }
 \description{
 Estimate bias using the compositional least-squares approach described in

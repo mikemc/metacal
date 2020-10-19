@@ -31,13 +31,13 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
   # Mix up the sample and taxa order
   observed <- observed[rownames(observed) %>% rev, colnames(observed) %>% rev]
 
-  expect_equal(bias, estimate_bias(observed, actual))
-  expect_equal(bias, estimate_bias(observed, actual %>% t))
+  expect_equal(bias, estimate_bias(observed, actual) %>% coef)
+  expect_equal(bias, estimate_bias(observed, actual %>% t) %>% coef)
 
   # non-zero values is observed that are zero in actual should be automatically
   # zeroed with a message
   observed <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
-  expect_message(bhat <- estimate_bias(observed, actual))
+  expect_message(bhat <- estimate_bias(observed, actual) %>% coef)
   expect_equal(bias, bhat)
 })
 
