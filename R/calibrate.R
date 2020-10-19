@@ -14,8 +14,8 @@
 #'   `w * sum(v) / sum(w)`
 #' * "none" Return `w` without any normalization
 #'
-#' If `y` is named, then the names must agree with the feature (taxa) names in
-#' `x` and will be used to reorder `y` to match the feature order in `x`.
+#' If `y` is named, then the names must agree with the taxa names in `x` and
+#' will be used to reorder `y` to match the taxa order in `x`.
 #'
 #' @param x An abundance matrix or phyloseq object containing one
 #' @param y A numeric vector with which to perturb the observations in x
@@ -38,16 +38,17 @@ perturb <- function(x, y, ...) {
 perturb.matrix <- function(x, y, margin, norm = "close") {
   stopifnot(margin %in% 1:2)
   stopifnot(norm %in% c("close", "keep", "none"))
-  stopifnot(identical(dim(x)[[margin]], length(y)))
+  taxa_margin <- setdiff(1:2, margin)
+  stopifnot(identical(dim(x)[[taxa_margin]], length(y)))
 
-  # Align features (taxa)
+  # Align taxa
   if (!is.null(names(y))) {
-    if (!setequal(dimnames(x)[[margin]], names(y)))
-      stop("Feature names in `x` and `y` do not match")
-    y <- y[dimnames(x)[[margin]]]
+    if (!setequal(dimnames(x)[[taxa_margin]], names(y)))
+      stop("Taxa names in `x` and `y` do not match")
+    y <- y[dimnames(x)[[taxa_margin]]]
   }
 
-  if (margin == 1) {
+  if (margin == 2) {
     z <- diag(y) %*% x
     rownames(z) <- rownames(x)
     if (norm %in% c("close", "keep"))
@@ -70,7 +71,7 @@ perturb.matrix <- function(x, y, margin, norm = "close") {
 #' @method perturb otu_table
 #' @export
 perturb.otu_table <- function(x, y, norm = "close") {
-  margin <- 2 - taxa_are_rows(x)
+  margin <- 1 + taxa_are_rows(x)
   z <- perturb.matrix(as(x, "matrix"), y, margin = margin, norm = norm)
   otu_table(z, taxa_are_rows = taxa_are_rows(x))
 }
@@ -103,9 +104,9 @@ setMethod("perturb", c("phyloseq", "numeric"), perturb.phyloseq)
 #' * "keep": Keep the same total abundance as the original observation
 #' * "none": Return the calibrated abundances without any normalization
 #'
-#' If `bias` is named, then the names must agree with the feature (taxa) names
-#' in `observed` and will be used to reorder `bias` to match the feature order
-#' in `observed`.
+#' If `bias` is named, then the names must agree with the taxa names in
+#' `observed` and will be used to reorder `bias` to match the taxa order in
+#' `observed`.
 #'
 #' @param observed An abundance matrix or phyloseq object containing one
 #' @param bias A numeric vector of relative efficiencies

@@ -37,7 +37,7 @@ McLaren, Willis, and Callahan (2019).
 \details{
 Bias is estimated by applying \code{\link[=center]{center()}} to the compositional error matrix
 defined by \code{observed/actual}, which requires that \code{observed} and \code{actual}
-are non-zero for the same sample-feature pairs. For convenience, this
+are non-zero for the same sample-taxa pairs. For convenience, this
 function will automatically set values in \code{observed} to 0 whose
 corresponding entries are 0 in \code{actual}, but it is up to you to replace 0
 values in \code{observed} with a non-zero value (such as a pseudocount).

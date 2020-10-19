@@ -37,8 +37,12 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
   # non-zero values is observed that are zero in actual should be automatically
   # zeroed with a message
   observed <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
-  expect_message(bhat <- estimate_bias(observed, actual) %>% coef)
-  expect_equal(bias, bhat)
+  expect_message(fit <- estimate_bias(observed, actual))
+  expect_equal(bias, coef(fit))
+
+  # Matrices stored in `fit` should have samples as rows, and so work without
+  # error in perturb() with `margin = 1`.
+  perturb(fit$actual, fit$estimate, margin = 1, norm = "close")
 })
 
 test_that("`calibrate()` and `perturb()` are inverse operations", {

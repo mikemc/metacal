@@ -41,9 +41,9 @@ sums to 1
 \item "none": Return the calibrated abundances without any normalization
 }
 
-If \code{bias} is named, then the names must agree with the feature (taxa) names
-in \code{observed} and will be used to reorder \code{bias} to match the feature order
-in \code{observed}.
+If \code{bias} is named, then the names must agree with the taxa names in
+\code{observed} and will be used to reorder \code{bias} to match the taxa order in
+\code{observed}.
 }
 \seealso{
 \code{\link[=perturb]{perturb()}} \code{\link[=estimate_bias]{estimate_bias()}}

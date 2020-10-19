@@ -5,7 +5,7 @@
 #'
 #' Bias is estimated by applying [center()] to the compositional error matrix
 #' defined by `observed/actual`, which requires that `observed` and `actual`
-#' are non-zero for the same sample-feature pairs. For convenience, this
+#' are non-zero for the same sample-taxa pairs. For convenience, this
 #' function will automatically set values in `observed` to 0 whose
 #' corresponding entries are 0 in `actual`, but it is up to you to replace 0
 #' values in `observed` with a non-zero value (such as a pseudocount).
@@ -39,7 +39,7 @@ estimate_bias.matrix <- function(observed, actual, margin, ...) {
   stopifnot(margin %in% 1:2)
   stopifnot(identical(dim(observed), dim(actual)))
 
-  # Align samples and features (taxa)
+  # Align samples and taxa
   stopifnot(setequal(rownames(observed), rownames(actual)))
   stopifnot(setequal(colnames(observed), colnames(actual)))
   observed <- observed[rownames(actual), colnames(actual)]
