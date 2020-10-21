@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Objects exported from other packages — corner • metacal</title>
+<title>Compute the log center by the projection method — log_center_proj • metacal</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,9 @@
 
 
 
-<meta property="og:title" content="Objects exported from other packages — corner" />
-<meta property="og:description" content="These objects are imported from other packages. Follow the links
-below to see their documentation.
-
-  usefulcorner
-
-" />
+<meta property="og:title" content="Compute the log center by the projection method — log_center_proj" />
+<meta property="og:description" content="Compute the log center by the projection method, which allows for missing
+observations." />
 
 
 
@@ -125,22 +121,27 @@ below to see their documentation.
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Objects exported from other packages</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
-    <div class="hidden name"><code>corner.Rd</code></div>
+    <h1>Compute the log center by the projection method</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/compositional-mean.R'><code>R/compositional-mean.R</code></a></small>
+    <div class="hidden name"><code>log_center_proj.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These objects are imported from other packages. Follow the links
-below to see their documentation.</p>
-<dl>
-  <dt>useful</dt><dd><p><code><a href='https://rdrr.io/pkg/useful/man/corner.html'>corner</a></code></p></dd>
-
-</dl>
+    <p>Compute the log center by the projection method, which allows for missing
+observations.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>log_center_proj</span><span class='op'>(</span><span class='va'>mat</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></pre>
 
 
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>van den Boogaart KG, Tolosana-Delgado R, Bren M. 2006. Concepts
+for handling of zeros and missing values in compositional data. Proc IAMG
+6:1-4. http://www.stat.boogaart.de/Publications/iamg06_s07_01.pdf</p>
+<p>Bren M, Tolosana-Delgado R, van den Boogaart KG. 2008. News from
+"compositions", the R package.
+https://core.ac.uk/download/pdf/132548286.pdf</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

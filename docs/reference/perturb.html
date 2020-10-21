@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Objects exported from other packages — corner • metacal</title>
+<title>Compositionally perturb a relative-abundance matrix — perturb • metacal</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,9 @@
 
 
 
-<meta property="og:title" content="Objects exported from other packages — corner" />
-<meta property="og:description" content="These objects are imported from other packages. Follow the links
-below to see their documentation.
-
-  usefulcorner
-
-" />
+<meta property="og:title" content="Compositionally perturb a relative-abundance matrix — perturb" />
+<meta property="og:description" content="The perturbation of two compositional vectors v and y is given (up to
+compositional equivalence) by the elementwise product v * y." />
 
 
 
@@ -125,22 +121,66 @@ below to see their documentation.
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Objects exported from other packages</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
-    <div class="hidden name"><code>corner.Rd</code></div>
+    <h1>Compositionally perturb a relative-abundance matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/calibrate.R'><code>R/calibrate.R</code></a></small>
+    <div class="hidden name"><code>perturb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These objects are imported from other packages. Follow the links
-below to see their documentation.</p>
-<dl>
-  <dt>useful</dt><dd><p><code><a href='https://rdrr.io/pkg/useful/man/corner.html'>corner</a></code></p></dd>
-
-</dl>
+    <p>The perturbation of two compositional vectors <code>v</code> and <code>y</code> is given (up to
+compositional equivalence) by the elementwise product <code>v * y</code>.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>perturb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>...</span><span class='op'>)</span>
 
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>perturb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>margin</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span>
 
+<span class='co'># S3 method for otu_table</span>
+<span class='fu'>perturb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span>
+
+<span class='co'># S3 method for phyloseq</span>
+<span class='fu'>perturb</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An abundance matrix or phyloseq object containing one</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>A numeric vector with which to perturb the observations in x</p></td>
+    </tr>
+    <tr>
+      <th>margin</th>
+      <td><p>Matrix margin that corresponds to observations (samples);
+<code>1</code> for rows, <code>2</code> for columns</p></td>
+    </tr>
+    <tr>
+      <th>norm</th>
+      <td><p>String specifying how to normalize the perturbed observations;
+see Details.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Let <code>w = v * y</code>, where <code>v</code> is a row or column of <code>x</code>. The normalization
+options specified by the <code>norm</code> argument are</p><ul>
+<li><p>"close" Return the compositional closure of w into the simplex,
+<code>w / sum(w)</code></p></li>
+<li><p>"keep" Keep the same total abundance as the original vector by returning
+<code>w * sum(v) / sum(w)</code></p></li>
+<li><p>"none" Return <code>w</code> without any normalization</p></li>
+</ul>
+
+<p>If <code>y</code> is named, then the names must agree with the taxa names in <code>x</code> and
+will be used to reorder <code>y</code> to match the taxa order in <code>x</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='calibrate.html'>calibrate()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

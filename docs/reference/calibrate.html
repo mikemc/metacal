@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Objects exported from other packages — corner • metacal</title>
+<title>Calibrate a relative-abundance matrix by a bias vector — calibrate • metacal</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,11 @@
 
 
 
-<meta property="og:title" content="Objects exported from other packages — corner" />
-<meta property="og:description" content="These objects are imported from other packages. Follow the links
-below to see their documentation.
-
-  usefulcorner
-
-" />
+<meta property="og:title" content="Calibrate a relative-abundance matrix by a bias vector — calibrate" />
+<meta property="og:description" content="Calibration via the simple deterministic procedure described in McLaren,
+Willis, and Callahan (2019), simply involved dividing the observed vector of
+relative abundances by the estimated bias vector and (optionally)
+normalizing the result to sum to 1 or some other chosen value." />
 
 
 
@@ -125,22 +123,67 @@ below to see their documentation.
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Objects exported from other packages</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
-    <div class="hidden name"><code>corner.Rd</code></div>
+    <h1>Calibrate a relative-abundance matrix by a bias vector</h1>
+    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/calibrate.R'><code>R/calibrate.R</code></a></small>
+    <div class="hidden name"><code>calibrate.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These objects are imported from other packages. Follow the links
-below to see their documentation.</p>
-<dl>
-  <dt>useful</dt><dd><p><code><a href='https://rdrr.io/pkg/useful/man/corner.html'>corner</a></code></p></dd>
-
-</dl>
+    <p>Calibration via the simple deterministic procedure described in McLaren,
+Willis, and Callahan (2019), simply involved dividing the observed vector of
+relative abundances by the estimated bias vector and (optionally)
+normalizing the result to sum to 1 or some other chosen value.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>calibrate</span><span class='op'>(</span><span class='va'>observed</span>, <span class='va'>bias</span>, <span class='va'>...</span><span class='op'>)</span>
 
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>calibrate</span><span class='op'>(</span><span class='va'>observed</span>, <span class='va'>bias</span>, <span class='va'>margin</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span>
 
+<span class='co'># S3 method for otu_table</span>
+<span class='fu'>calibrate</span><span class='op'>(</span><span class='va'>observed</span>, <span class='va'>bias</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span>
+
+<span class='co'># S3 method for phyloseq</span>
+<span class='fu'>calibrate</span><span class='op'>(</span><span class='va'>observed</span>, <span class='va'>bias</span>, norm <span class='op'>=</span> <span class='st'>"close"</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>observed</th>
+      <td><p>An abundance matrix or phyloseq object containing one</p></td>
+    </tr>
+    <tr>
+      <th>bias</th>
+      <td><p>A numeric vector of relative efficiencies</p></td>
+    </tr>
+    <tr>
+      <th>margin</th>
+      <td><p>Matrix margin that corresponds to observations (samples);
+<code>1</code> for rows, <code>2</code> for columns</p></td>
+    </tr>
+    <tr>
+      <th>norm</th>
+      <td><p>String specifying how to normalize the calibrated observations;
+see Details.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Normalization options specified by <code>norm</code>:</p><ul>
+<li><p>"close": Divide the calibrated abundance vector by its sum, so that it
+sums to 1</p></li>
+<li><p>"keep": Keep the same total abundance as the original observation</p></li>
+<li><p>"none": Return the calibrated abundances without any normalization</p></li>
+</ul>
+
+<p>If <code>bias</code> is named, then the names must agree with the taxa names in
+<code>observed</code> and will be used to reorder <code>bias</code> to match the taxa order in
+<code>observed</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='perturb.html'>perturb()</a></code> <code><a href='estimate_bias.html'>estimate_bias()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
