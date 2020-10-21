@@ -68,3 +68,14 @@ test_that("`calibrate()` (and `perturb()`) normalizations work", {
     calibrate(otu, y, norm = "keep") %>% phyloseq::sample_sums()
   )
 })
+
+test_that("taxa disagreements are properly handled", {
+  y1 <- rlang::set_names(y, phyloseq::taxa_names(otu)) %>% rev
+  y2 <- rlang::set_names(y, letters[seq_along(y)])
+  # calibrate should work as long as some taxa names are shared with `bias`
+  cal <- calibrate(otu, y1[1:4])
+  expect_identical(taxa_names(cal), intersect(taxa_names(otu), names(y1)[1:4]))
+  expect_error(calibrate(otu, y[1:4]))
+  expect_error(calibrate(otu, y2))
+  expect_error(calibrate(otu, y2[1:4]))
+})

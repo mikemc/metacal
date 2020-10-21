@@ -134,6 +134,17 @@ calibrate.matrix <- function(observed, bias, margin, norm = "close") {
 #' @method calibrate otu_table
 #' @export
 calibrate.otu_table <- function(observed, bias, norm = "close") {
+  # The otu-table method will try to subset to the shared taxa in observed and
+  # bias
+  if (!identical(ntaxa(observed), length(bias))) {
+    if (is.null(names(bias)))
+      stop("`bias` must be named if `!identical(ntaxa(observed), length(bias))`")
+    taxa <- intersect(taxa_names(observed), names(bias))
+    if (!length(taxa) > 0)
+      stop("`intersect(taxa_names(observed), names(bias))` is empty")
+    observed <- phyloseq::prune_taxa(taxa, observed)
+    bias <- bias[taxa]
+  } # else: perturb() will make sure the taxa names match the names in bias
   perturb.otu_table(observed, 1 / bias, norm = norm)
 }
 
