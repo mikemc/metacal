@@ -5,6 +5,7 @@
 \alias{perturb.matrix}
 \alias{perturb.otu_table}
 \alias{perturb.phyloseq}
+\alias{perturb.mc_bias_fit}
 \title{Compositionally perturb a relative-abundance matrix}
 \usage{
 perturb(x, y, ...)
@@ -14,6 +15,8 @@ perturb(x, y, ...)
 \method{perturb}{otu_table}(x, y, norm = "close")
 
 \method{perturb}{phyloseq}(x, y, norm = "close")
+
+\method{perturb}{mc_bias_fit}(x, y)
 }
 \arguments{
 \item{x}{An abundance matrix or phyloseq object containing one}

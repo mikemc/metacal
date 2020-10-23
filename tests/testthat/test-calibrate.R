@@ -37,18 +37,28 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
   # non-zero values is observed that are zero in actual should be automatically
   # zeroed with a message
   observed <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
-  expect_message(fit <- estimate_bias(observed, actual))
+  expect_message(fit <- estimate_bias(observed, actual, boot = TRUE, times = 2))
   expect_equal(bias, coef(fit))
 
   # Matrices stored in `fit` should have samples as rows, and so work without
   # error in perturb() with `margin = 1`.
   perturb(fit$actual, fit$estimate, margin = 1, norm = "close")
+
+  # Check perturb on mc_bias_fit's
+  x <- perturb(fit, 1/fit$estimate)
+  expect_equal(x$estimate / x$estimate, apply(x$bootreps, 2, mean))
+  expect_error(perturb(fit, 1:3))
 })
 
 test_that("`calibrate()` and `perturb()` are inverse operations", {
   expect_equal(
     otu,
     otu %>% perturb(y, norm = "none") %>% calibrate(y, norm = "none")
+  )
+  mat <- otu %>% as("matrix")
+  expect_equal(
+    mat,
+    mat %>% perturb(y, 2, norm = "none") %>% calibrate(y, 2, norm = "none")
   )
   # Should also work if y is named and has a different order
   y1 <- rlang::set_names(y, taxa_names(otu)) %>% rev

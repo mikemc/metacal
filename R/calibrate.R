@@ -84,7 +84,17 @@ perturb.phyloseq <- function(x, y, norm = "close") {
   x
 }
 
-setMethod("perturb", c("matrix", "numeric"), perturb.matrix)
+#' @rdname perturb
+#' @method perturb mc_bias_fit
+#' @export
+perturb.mc_bias_fit <- function(x, y) {
+  stopifnot(identical(length(x$estimate), length(y)))
+  x$estimate <- x$estimate * y
+  if (!is.null(x$bootreps))
+    x$bootreps <- sweep(x$bootreps, 2, y, `*`)
+  x
+}
+
 setMethod("perturb", c("otu_table", "numeric"), perturb.otu_table)
 setMethod("perturb", c("phyloseq", "numeric"), perturb.phyloseq)
 
