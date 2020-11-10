@@ -186,9 +186,7 @@ Some notes about this plot:
   transform since it can more easily handle any 0s that happen to be in the
   data than these other transforms. I set `1e-3` as the linear-to-log
   transition point; you should play around with this value with your own data.
-  Note the use of pseudo-log-transformed axes. I will saved these axes
-  transformations in a list (allow with `coord_fixed()`) so that we can reuse
-  them with other plots.
+  I saved the transformed axes in a variable `axes` to reuse in later plots.
 
 * Because the actual proportions are clustered at just 4 values, I used
   `geom_quasirandom()` from the ggbeeswarm package to jitter the points.
@@ -204,11 +202,11 @@ Some notes about this plot:
 # Estimate bias
 
 Metacal provides a high-level interface to estimating bias, `estimate_bias()`,
-which expect two matrices or phyloseq objects with the observed and actual
+which expects two matrices or phyloseq objects with the observed and actual
 abundances for a set of control samples. To obtain sensible estimates using
 this function, we must first ensure that all taxa have an observed abundance
 that is greater than 0 in samples where their actual abundance is greater than
-0. We will therefore use add a pseudocount of 1 to the observed counts to
+0. We will therefore add a pseudocount of 1 to the observed counts to
 remove 0s; other zero-replacement methods, such as `cmultRepl()` from
 zCompositions, would also work. The estimation method used by `estimate_bias()`
 also requires that taxa not supposed to be in a sample have an abundance of
@@ -298,9 +296,8 @@ props.fitted %>%
 ```
 
 This plot shows that the fitted model is doing a good job of explaining the
-error across the full range of predicted proportions, though it is
-systematically underpredicting the observed relative abundances at the lowest
-values.
+error across the full range of predicted proportions, though it is slightly
+underpredicting the observed proportions at low values.
 
 # Calibrate
 
@@ -333,7 +330,7 @@ ps.pseudo <- transform_sample_counts(ps, function(x) x + 1)
 ps.pseudo.cal <- calibrate(ps.pseudo, bias) %>% print
 ```
 
-To verify calibration that worked as expected, let's compare the observed,
+To verify that calibration worked as expected, let's compare the observed,
 calibrated, and actual taxon proportions in the 10 control samples. Again, I'll
 start by adding the calibrated proportions to the data frame with observed and
 actual proportions,
@@ -387,10 +384,10 @@ props.cal %>%
 ```
 
 This plot has essentially same information as the earlier plot examining the
-model fit, but seen from a slightly different angle. We can see that
-calibration in this dataset clearly reduces the relative error in proportions
-across the full range of tested true proportions, but leads to estimates that
-are systematically too low at low proportions by a small factor.
+model fit, but seen from a different angle. We can see that calibration in this
+dataset clearly reduces the relative error in proportions across the tested
+range of actual proportions, but leads to estimates that are systematically too
+low at low proportions.
 
 # Session info
 
