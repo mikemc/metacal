@@ -1,5 +1,7 @@
 # metacal
 
+[![DOI](https://zenodo.org/badge/192036279.svg)](https://zenodo.org/badge/latestdoi/192036279)
+
 The metacal package provides tools for bias estimation and calibration in
 marker-gene and metagenomics sequencing experiments. It implements the methods
 described in [McLaren MR, Willis AD, Callahan BJ
