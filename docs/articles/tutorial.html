@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metacal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9011</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -76,7 +79,8 @@
 
       
 
-      </header><script src="tutorial_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
+      </header><script src="tutorial_files/header-attrs-2.5/header-attrs.js"></script><link href="tutorial_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="tutorial_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Tutorial</h1>
@@ -98,16 +102,16 @@
 <h1 class="hasAnchor">
 <a href="#setup" class="anchor"></a>Setup</h1>
 <p>First, let’s set up our R environment. This tutorial uses phyloseq objects and functions to store and manipulate the microbiome data, tidyverse packages for data manipulation and plotting, and some add-ons to ggplot2 from the ggbeeswarm and cowplot packages.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># Tools for microbiome data</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Tools for microbiome data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dx.plos.org/10.1371/journal.pone.0061217">phyloseq</a></span><span class="op">)</span>
 <span class="co"># Tools for general purpose data manipulation and plotting</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="co">#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</span>
 <span class="co">#&gt; ✔ ggplot2 3.3.2     ✔ purrr   0.3.4</span>
-<span class="co">#&gt; ✔ tibble  3.0.3     ✔ dplyr   1.0.2</span>
+<span class="co">#&gt; ✔ tibble  3.0.4     ✔ dplyr   1.0.2</span>
 <span class="co">#&gt; ✔ tidyr   1.1.2     ✔ stringr 1.4.0</span>
-<span class="co">#&gt; ✔ readr   1.3.1     ✔ forcats 0.5.0</span>
+<span class="co">#&gt; ✔ readr   1.4.0     ✔ forcats 0.5.0</span>
 <span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span>
 <span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span>
 <span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span>
@@ -117,10 +121,10 @@
 <span class="fu">theme_set</span><span class="op">(</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/theme_cowplot.html">theme_cowplot</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mikemc.github.io/metacal">metacal</a></span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span><span class="op">(</span><span class="st">"metacal"</span><span class="op">)</span>
-<span class="co">#&gt; [1] '0.1.0.9011'</span></pre></div>
+<span class="co">#&gt; [1] '0.2.0'</span></code></pre></div>
 <p>Next, we download the source data from Leopold and Busby (2020), which is available in <a href="https://zenodo.org/record/3872145">Zenodo record 3872145</a>. Set <code>data_path</code> to wherever you would like the data to be downloaded.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html">here</a></span><span class="op">(</span><span class="st">"dev"</span>, <span class="st">"data"</span>, <span class="st">"leopold2020"</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_path</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"dev"</span>, <span class="st">"data"</span>, <span class="st">"leopold2020"</span><span class="op">)</span>
 <span class="co"># To use a temporary directory:</span>
 <span class="co"># data_path &lt;- file.path(tempdir(), "leopold2020")</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.exists</a></span><span class="op">(</span><span class="va">data_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
@@ -133,10 +137,10 @@
     <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, <span class="st">"Populus_priorityEffects-v1.2.zip"</span><span class="op">)</span>, 
     exdir <span class="op">=</span> <span class="va">data_path</span>
   <span class="op">)</span>
-<span class="op">}</span></pre></div>
+<span class="op">}</span></code></pre></div>
 <p>The microbiome data is stored in a phyloseq object,</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, 
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, 
   <span class="st">"dleopold-Populus_priorityEffects-8594f7c/output/compiled/phy.rds"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="va">readRDS</span> <span class="op">%&gt;%</span>
   <span class="va">print</span>
@@ -144,20 +148,20 @@
 <span class="co">#&gt; otu_table()   OTU Table:         [ 219 taxa and 567 samples ]</span>
 <span class="co">#&gt; sample_data() Sample Data:       [ 567 samples by 16 sample variables ]</span>
 <span class="co">#&gt; tax_table()   Taxonomy Table:    [ 219 taxa by 7 taxonomic ranks ]</span>
-<span class="co">#&gt; refseq()      DNAStringSet:      [ 219 reference sequences ]</span></pre></div>
+<span class="co">#&gt; refseq()      DNAStringSet:      [ 219 reference sequences ]</span></code></pre></div>
 <p>The (expected) actual compositions of the mock (control) samples can be computed from a csv file that contains the dilution factors used during sample construction. I will read in the csv file, convert it to a phyloseq object, and then compute the relative abundances of each species from the reciprocals of the dilution factors.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">mock_actual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, 
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mock_actual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_path</span>, 
   <span class="st">"dleopold-Populus_priorityEffects-8594f7c/data/MockCommunities.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span>row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">Sym4</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">as</span><span class="op">(</span><span class="st">"matrix"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span>taxa_are_rows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/transformcounts.html">transform_sample_counts</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="../reference/close_elts.html">close_elts</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span>
-<span class="va">mock_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html">taxa_names</a></span><span class="op">(</span><span class="va">mock_actual</span><span class="op">)</span></pre></div>
+<span class="va">mock_taxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html">taxa_names</a></span><span class="op">(</span><span class="va">mock_actual</span><span class="op">)</span></code></pre></div>
 <p>Note, I have converted the actual relative abundances to proportions, but the observed abundances in the <code>ps</code> object have the form of read counts,</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/prune_taxa-methods.html">prune_taxa</a></span><span class="op">(</span><span class="va">mock_taxa</span>, <span class="va">.</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">corner</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/prune_taxa-methods.html">prune_taxa</a></span><span class="op">(</span><span class="va">mock_taxa</span>, <span class="va">.</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">corner</span>
 <span class="co">#&gt; OTU Table:          [5 taxa and 5 samples]</span>
 <span class="co">#&gt;                      taxa are columns</span>
 <span class="co">#&gt;                  Melampsora Dioszegia Epicoccum Fusarium Penicillium</span>
@@ -165,10 +169,10 @@
 <span class="co">#&gt; F2.Fusarium               7         0         0    23942           0</span>
 <span class="co">#&gt; F3.Rust               13340         0         0        4           0</span>
 <span class="co">#&gt; F4.Aureobasidium         20         7         0        5           0</span>
-<span class="co">#&gt; F5.Epicoccum              7         0      7940        0           0</span></pre></div>
+<span class="co">#&gt; F5.Epicoccum              7         0      7940        0           0</span></code></pre></div>
 <p>Let’s take a look at the sample data and taxonomy table in the phyloseq object,</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">sam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_data-methods.html">sample_data</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as</span><span class="op">(</span><span class="st">"data.frame"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as_tibble</span><span class="op">(</span>rownames <span class="op">=</span> <span class="st">"Sample"</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_data-methods.html">sample_data</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as</span><span class="op">(</span><span class="st">"data.frame"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as_tibble</span><span class="op">(</span>rownames <span class="op">=</span> <span class="st">"Sample"</span><span class="op">)</span>
 <span class="va">tax</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/tax_table-methods.html">tax_table</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as</span><span class="op">(</span><span class="st">"matrix"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">as_tibble</span><span class="op">(</span>rownames <span class="op">=</span> <span class="st">"Taxon"</span><span class="op">)</span>
 <span class="va">sam</span> <span class="op">%&gt;%</span> <span class="va">glimpse</span>
 <span class="co">#&gt; Rows: 567</span>
@@ -197,11 +201,11 @@
 <span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt;</span>
 <span class="co">#&gt; 1 Experiment   548</span>
 <span class="co">#&gt; 2 Mock          10</span>
-<span class="co">#&gt; 3 Single         9</span></pre></div>
+<span class="co">#&gt; 3 Single         9</span></code></pre></div>
 <p>The control samples are the 10 samples with <code>Samp_type == "Mock"</code>.</p>
 <p>Now let’s look at the taxonomy table,</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">tax</span> <span class="op">%&gt;%</span> <span class="va">head</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tax</span> <span class="op">%&gt;%</span> <span class="va">head</span>
 <span class="co">#&gt; # A tibble: 6 x 8</span>
 <span class="co">#&gt;   Taxon  Kingdom  Phylum     Class       Order     Family     Genus    Species  </span>
 <span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;    </span>
@@ -225,15 +229,15 @@
 <span class="co">#&gt; 8 Dioszegia     f__Bulleribasidiaceae g__Dioszegia      s__butyracea    </span>
 <span class="co">#&gt; 9 Epicoccum     f__Didymellaceae      g__Epicoccum      s__dendrobii</span>
 <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/ntaxa-methods.html">ntaxa</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span> 
-<span class="co">#&gt; [1] 219</span></pre></div>
+<span class="co">#&gt; [1] 219</span></code></pre></div>
 <p>There are 219 OTUs, of which 9 have been assigned to the mock taxa (the pathogen, here named “Melampsora”, and the 8 foliar fungi). The names of the mock taxa in <code>ps</code> have already been set to exactly match those in <code>mock_actual</code>, which is a requirement for the steps that follow.</p>
 </div>
 <div id="inspect-mock-community-measurements" class="section level1">
 <h1 class="hasAnchor">
 <a href="#inspect-mock-community-measurements" class="anchor"></a>Inspect mock community measurements</h1>
 <p>To get a sense of how the mock mixtures were created, we can take a look at the expected proportions of the 9 taxa across the 10 samples,</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">mock_actual</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mock_actual</span> <span class="op">%&gt;%</span>
   <span class="va">psmelt</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>
     <span class="fu">across</span><span class="op">(</span><span class="va">OTU</span>, <span class="va">factor</span>, levels <span class="op">=</span> <span class="va">mock_taxa</span><span class="op">)</span>,
@@ -242,23 +246,23 @@
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Sample</span>, <span class="va">OTU</span>, fill <span class="op">=</span> <span class="va">Abundance</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_fill_viridis_c</span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log10"</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.02</span>, <span class="fl">0.05</span>, <span class="fl">1e-1</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://wilkelab.org/cowplot/reference/theme_cowplot.html">theme_cowplot</a></span><span class="op">(</span>font_size <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://wilkelab.org/cowplot/reference/theme_cowplot.html">theme_cowplot</a></span><span class="op">(</span>font_size <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-8-1.png" width="720"></p>
 <p>All taxa are in every sample, but in varying proportions that range from around 0.01 to 0.3.</p>
 <p>To visualize and estimate bias, we’ll work with a phyloseq object of the observed compositions subset to just the mock community samples and taxa,</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">ps.mock</span> <span class="op">&lt;-</span> <span class="va">ps</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ps.mock</span> <span class="op">&lt;-</span> <span class="va">ps</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/subset_samples-methods.html">subset_samples</a></span><span class="op">(</span><span class="va">Samp_type</span> <span class="op">==</span> <span class="st">"Mock"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/prune_taxa-methods.html">prune_taxa</a></span><span class="op">(</span><span class="va">mock_taxa</span>, <span class="va">.</span><span class="op">)</span></pre></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/prune_taxa-methods.html">prune_taxa</a></span><span class="op">(</span><span class="va">mock_taxa</span>, <span class="va">.</span><span class="op">)</span></code></pre></div>
 <p>Next, let’s compare the observed to actual taxon proportions in the mocks. I’ll first combine the observed and actual proportions in a data frame in “long” format,</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="va">props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Actual <span class="op">=</span> <span class="va">mock_actual</span>, Observed <span class="op">=</span> <span class="va">ps.mock</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Actual <span class="op">=</span> <span class="va">mock_actual</span>, Observed <span class="op">=</span> <span class="va">ps.mock</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">map</span><span class="op">(</span><span class="va">transform_sample_counts</span>, <span class="va">close_elts</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">map_dfr</span><span class="op">(</span><span class="va">psmelt</span>, .id <span class="op">=</span> <span class="st">"Type"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">select</span><span class="op">(</span><span class="va">Type</span>, <span class="va">OTU</span>, <span class="va">Sample</span>, <span class="va">Abundance</span><span class="op">)</span></pre></div>
+  <span class="fu">select</span><span class="op">(</span><span class="va">Type</span>, <span class="va">OTU</span>, <span class="va">Sample</span>, <span class="va">Abundance</span><span class="op">)</span></code></pre></div>
 <p>We can plot the observed vs. actual proportions with ggplot as follows,</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">brks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1e-3</span>, <span class="fl">1e-2</span>, <span class="fl">1e-1</span>, <span class="fl">0.3</span><span class="op">)</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1e-3</span>, <span class="fl">1e-2</span>, <span class="fl">1e-1</span>, <span class="fl">0.3</span><span class="op">)</span>
 <span class="va">axes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
   <span class="fu">scale_y_continuous</span><span class="op">(</span>trans <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org//reference/log_trans.html">pseudo_log_trans</a></span><span class="op">(</span><span class="fl">1e-3</span><span class="op">)</span>, 
     breaks <span class="op">=</span> <span class="va">brks</span>, labels <span class="op">=</span> <span class="va">brks</span><span class="op">)</span>,
@@ -274,11 +278,11 @@
   <span class="fu"><a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_quasirandom.html">geom_quasirandom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="va">axes</span> <span class="op">+</span>
   <span class="fu">scale_shape_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></pre></div>
+  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
 <p>Some notes about this plot:</p>
 <ul>
-<li><p>Axes transformations: The multiplicative error created by bias can only be easily seen for low-proportion taxa if we use some form of log transformation. Options to consider include a log (or log10) transformation, logit transformation, and a pseudo-log transformation (which is linear at low values and logarithmic at higher values). Here I will use the pseudo-log transform since it can more easily handle any 0s that happen to be in the data than these other transforms. I set <code>1e-3</code> as the linear-to-log transition point; you should play around with this value with your own data. Note the use of pseudo-log-transformed axes. I will saved these axes transformations in a list (allow with <code>coord_fixed()</code>) so that we can reuse them with other plots.</p></li>
+<li><p>Axes transformations: The multiplicative error created by bias can only be easily seen for low-proportion taxa if we use some form of log transformation. Options to consider include a log (or log10) transformation, logit transformation, and a pseudo-log transformation (which is linear at low values and logarithmic at higher values). Here I will use the pseudo-log transform since it can more easily handle any 0s that happen to be in the data than these other transforms. I set <code>1e-3</code> as the linear-to-log transition point; you should play around with this value with your own data. I saved the transformed axes in a variable <code>axes</code> to reuse in later plots.</p></li>
 <li><p>Because the actual proportions are clustered at just 4 values, I used <code><a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_quasirandom.html">geom_quasirandom()</a></code> from the ggbeeswarm package to jitter the points.</p></li>
 <li><p>I have highlighted the sample Mock.5 as it was identified as an outlier by Leopold2020. It is the only sample where a taxon (Epicoccum) was undetected in a sample where it should have been present (the point at (0.01, 0)). Other than this non-detection, the observations of this sample seem in line with the others. I will include this sample in this tutorial, but we need to be aware that how we deal with this zero value may have undue influence on our bias estimate.</p></li>
 </ul>
@@ -286,17 +290,17 @@
 <div id="estimate-bias" class="section level1">
 <h1 class="hasAnchor">
 <a href="#estimate-bias" class="anchor"></a>Estimate bias</h1>
-<p>Metacal provides a high-level interface to estimating bias, <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code>, which expect two matrices or phyloseq objects with the observed and actual abundances for a set of control samples. To obtain sensible estimates using this function, we must first ensure that all taxa have an observed abundance that is greater than 0 in samples where their actual abundance is greater than 0. We will therefore use add a pseudocount of 1 to the observed counts to remove 0s; other zero-replacement methods, such as <code>cmultRepl()</code> from zCompositions, would also work. The estimation method used by <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> also requires that taxa not supposed to be in a sample have an abundance of exactly 0, but the <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> function will automatically zero-out these observations for you.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span><span class="va">ps.mock</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>
+<p>Metacal provides a high-level interface to estimating bias, <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code>, which expects two matrices or phyloseq objects with the observed and actual abundances for a set of control samples. To obtain sensible estimates using this function, we must first ensure that all taxa have an observed abundance that is greater than 0 in samples where their actual abundance is greater than 0. We will therefore add a pseudocount of 1 to the observed counts to remove 0s; other zero-replacement methods, such as <code>cmultRepl()</code> from zCompositions, would also work. The estimation method used by <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> also requires that taxa not supposed to be in a sample have an abundance of exactly 0, but the <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> function will automatically zero-out these observations for you.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span><span class="va">ps.mock</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>
 <span class="co">#&gt; [1] 1</span>
 <span class="va">ps.mock.pseudo</span> <span class="op">&lt;-</span> <span class="va">ps.mock</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/transformcounts.html">transform_sample_counts</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span><span class="va">ps.mock.pseudo</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></pre></div>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>Now we can estimate bias using <code>ps.mock.pseudo</code> as our observed abundances. We use the <code>boot = TRUE</code> option to also generate bootstrap replicates that will give us a way to quantify the uncertainty in our estimate.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="va">mc_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_bias.html">estimate_bias</a></span><span class="op">(</span><span class="va">ps.mock.pseudo</span>, <span class="va">mock_actual</span>, boot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mc_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_bias.html">estimate_bias</a></span><span class="op">(</span><span class="va">ps.mock.pseudo</span>, <span class="va">mock_actual</span>, boot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
 <span class="co">#&gt; A metacal bias fit.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Estimated relative efficiencies:</span>
@@ -307,17 +311,17 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Contains 1000 bootstrap replicates.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span>
-<span class="co">#&gt; [1] "mc_bias_fit"</span></pre></div>
+<span class="co">#&gt; [1] "mc_bias_fit"</span></code></pre></div>
 <p><code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> returns an “mc_bias_fit” object that can be interacted with through commonly used S3 methods such as <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>, and <code><a href="https://rdrr.io/r/stats/coef.html">coef()</a></code>. The bias estimate can be extracted with <code><a href="https://rdrr.io/r/stats/coef.html">coef()</a></code>,</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="va">bias</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bias</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
 <span class="co">#&gt;    Melampsora     Dioszegia     Epicoccum      Fusarium   Penicillium </span>
 <span class="co">#&gt;     8.7486819     0.2947290     1.0064648     3.0660596     0.2233792 </span>
 <span class="co">#&gt;  Cladosporium   Trichoderma    Alternaria Aureobasidium </span>
-<span class="co">#&gt;     0.8988898     0.5776648     1.4679841     0.7380894</span></pre></div>
+<span class="co">#&gt;     0.8988898     0.5776648     1.4679841     0.7380894</span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> method uses the bootstrap replicates in the “mc_bias_fit” object to estimate the (geometric) standard error of the bias estimate,</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="va">mc_fit.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mc_fit.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">mc_fit.summary</span><span class="op">)</span>
 <span class="co">#&gt; Summary of a metacal bias fit.</span>
 <span class="co">#&gt; </span>
@@ -325,47 +329,47 @@
 <span class="co">#&gt; # A tibble: 9 x 4</span>
 <span class="co">#&gt;   taxon         estimate gm_mean gm_se</span>
 <span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Melampsora       8.75    8.76   1.06</span>
-<span class="co">#&gt; 2 Dioszegia        0.295   0.297  1.10</span>
-<span class="co">#&gt; 3 Epicoccum        1.01    0.994  1.54</span>
-<span class="co">#&gt; 4 Fusarium         3.07    3.06   1.15</span>
-<span class="co">#&gt; 5 Penicillium      0.223   0.224  1.09</span>
-<span class="co">#&gt; 6 Cladosporium     0.899   0.894  1.14</span>
-<span class="co">#&gt; 7 Trichoderma      0.578   0.579  1.09</span>
+<span class="co">#&gt; 1 Melampsora       8.75    8.77   1.06</span>
+<span class="co">#&gt; 2 Dioszegia        0.295   0.294  1.10</span>
+<span class="co">#&gt; 3 Epicoccum        1.01    0.986  1.52</span>
+<span class="co">#&gt; 4 Fusarium         3.07    3.09   1.14</span>
+<span class="co">#&gt; 5 Penicillium      0.223   0.223  1.09</span>
+<span class="co">#&gt; 6 Cladosporium     0.899   0.906  1.13</span>
+<span class="co">#&gt; 7 Trichoderma      0.578   0.578  1.09</span>
 <span class="co">#&gt; 8 Alternaria       1.47    1.47   1.08</span>
-<span class="co">#&gt; 9 Aureobasidium    0.738   0.743  1.13</span>
+<span class="co">#&gt; 9 Aureobasidium    0.738   0.742  1.13</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Geometric standard error estimated from 1000 bootstrap replicates.</span></pre></div>
+<span class="co">#&gt; Geometric standard error estimated from 1000 bootstrap replicates.</span></code></pre></div>
 <p>producing a data frame with the estimate and standard error that can be accessed with</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="va">coef_tb</span> <span class="op">&lt;-</span> <span class="va">mc_fit.summary</span><span class="op">$</span><span class="va">coefficients</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coef_tb</span> <span class="op">&lt;-</span> <span class="va">mc_fit.summary</span><span class="op">$</span><span class="va">coefficients</span></code></pre></div>
 <p>Let’s use this data frame to plot the bias estimate with two geometric standard errors,</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="va">coef_tb</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coef_tb</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>taxon <span class="op">=</span> <span class="fu">fct_reorder</span><span class="op">(</span><span class="va">taxon</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">taxon</span>, <span class="va">estimate</span>, 
       ymin <span class="op">=</span> <span class="va">estimate</span> <span class="op">/</span> <span class="va">gm_se</span><span class="op">^</span><span class="fl">2</span>, ymax <span class="op">=</span> <span class="va">estimate</span> <span class="op">*</span> <span class="va">gm_se</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_pointrange</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_y_log10</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></pre></div>
+  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-17-1.png" width="480"></p>
 <p>This plot shows that these estimates are consistent but not identical with those in Leopold2020 Fig S2. The difference is due to our inclusion of the Mock.5 sample, which leads to a lower point estimate and larger standard error for <em>Epicoccum</em>.</p>
 <div id="check-model-fit" class="section level2">
 <h2 class="hasAnchor">
 <a href="#check-model-fit" class="anchor"></a>Check model fit</h2>
 <p>The fitted values of the model can be accessed with <code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code>; these are the proportions that we predict we’d observe for the control samples given the actual proportions and the estimated bias. The <code><a href="https://rdrr.io/r/stats/fitted.values.html">fitted()</a></code> function returns a matrix with samples as rows and taxa as columns, which I’ll convert into a phyloseq object.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="va">observed.fitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span>taxa_are_rows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">observed.fitted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">mc_fit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/otu_table-methods.html">otu_table</a></span><span class="op">(</span>taxa_are_rows <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>To plot the fitted values against the observed values, I’ll add the fitted proportions to our earlier <code>props</code> data frame,</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="va">props.fitted</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">props.fitted</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span>
   <span class="va">props</span>, 
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/psmelt.html">psmelt</a></span><span class="op">(</span><span class="va">observed.fitted</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">add_column</span><span class="op">(</span>Type <span class="op">=</span> <span class="st">"Fitted"</span><span class="op">)</span>
-<span class="op">)</span></pre></div>
+<span class="op">)</span></code></pre></div>
 <p>Next, I’ll use some tidyr manipulations and ggplot to plot the observed proportions vs. the actual and fitted predictions,</p>
-<div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="va">props.fitted</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">props.fitted</span> <span class="op">%&gt;%</span>
   <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Type</span>, values_from <span class="op">=</span> <span class="va">Abundance</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">pivot_longer</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Fitted</span>, <span class="va">Actual</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"Type"</span>, values_to <span class="op">=</span> <span class="st">"Predicted"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Predicted</span>, <span class="va">Observed</span>, color <span class="op">=</span> <span class="va">OTU</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -373,9 +377,9 @@
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="va">axes</span> <span class="op">+</span> 
   <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">Type</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></pre></div>
+  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-20-1.png" width="816"></p>
-<p>This plot shows that the fitted model is doing a good job of explaining the error across the full range of predicted proportions, though it is systematically underpredicting the observed relative abundances at the lowest values.</p>
+<p>This plot shows that the fitted model is doing a good job of explaining the error across the full range of predicted proportions, though it is slightly underpredicting the observed proportions at low values.</p>
 </div>
 </div>
 <div id="calibrate" class="section level1">
@@ -389,26 +393,26 @@
 <li><p>An implication is that taxa whose observed abundance is 0 will have a calibrated abundance of 0. Whether and how you replace 0s prior to calibration may have a significant impact on downstream analyses.</p></li>
 </ul>
 <p>Here I will use a pseudocount to make all the taxa abundances positive prior to calibration.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="va">ps.pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/transformcounts.html">transform_sample_counts</a></span><span class="op">(</span><span class="va">ps</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ps.pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/transformcounts.html">transform_sample_counts</a></span><span class="op">(</span><span class="va">ps</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">ps.pseudo.cal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calibrate.html">calibrate</a></span><span class="op">(</span><span class="va">ps.pseudo</span>, <span class="va">bias</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">print</span>
 <span class="co">#&gt; phyloseq-class experiment-level object</span>
 <span class="co">#&gt; otu_table()   OTU Table:         [ 9 taxa and 567 samples ]</span>
 <span class="co">#&gt; sample_data() Sample Data:       [ 567 samples by 16 sample variables ]</span>
 <span class="co">#&gt; tax_table()   Taxonomy Table:    [ 9 taxa by 7 taxonomic ranks ]</span>
-<span class="co">#&gt; refseq()      DNAStringSet:      [ 9 reference sequences ]</span></pre></div>
-<p>To verify calibration that worked as expected, let’s compare the observed, calibrated, and actual taxon proportions in the 10 control samples. Again, I’ll start by adding the calibrated proportions to the data frame with observed and actual proportions,</p>
-<div class="sourceCode" id="cb22"><pre class="downlit">
-<span class="va">ps.pseudo.cal.mock</span> <span class="op">&lt;-</span> <span class="va">ps.pseudo.cal</span> <span class="op">%&gt;%</span> 
+<span class="co">#&gt; refseq()      DNAStringSet:      [ 9 reference sequences ]</span></code></pre></div>
+<p>To verify that calibration worked as expected, let’s compare the observed, calibrated, and actual taxon proportions in the 10 control samples. Again, I’ll start by adding the calibrated proportions to the data frame with observed and actual proportions,</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ps.pseudo.cal.mock</span> <span class="op">&lt;-</span> <span class="va">ps.pseudo.cal</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/subset_samples-methods.html">subset_samples</a></span><span class="op">(</span><span class="va">Samp_type</span> <span class="op">==</span> <span class="st">"Mock"</span><span class="op">)</span>
 <span class="va">props.cal</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span>
   <span class="va">props</span>, 
   <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/psmelt.html">psmelt</a></span><span class="op">(</span><span class="va">ps.pseudo.cal.mock</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">add_column</span><span class="op">(</span>Type <span class="op">=</span> <span class="st">"Calibrated"</span><span class="op">)</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">select</span><span class="op">(</span><span class="va">Type</span>, <span class="va">OTU</span>, <span class="va">Sample</span>, <span class="va">Abundance</span><span class="op">)</span></pre></div>
+  <span class="fu">select</span><span class="op">(</span><span class="va">Type</span>, <span class="va">OTU</span>, <span class="va">Sample</span>, <span class="va">Abundance</span><span class="op">)</span></code></pre></div>
 <p>First, let’s look at bar plots comparing the observed, calibrated, and actual compositions,</p>
-<div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="va">props.cal</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">props.cal</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>
     <span class="fu">across</span><span class="op">(</span><span class="va">Type</span>, <span class="va">fct_rev</span><span class="op">)</span>,
     <span class="fu">across</span><span class="op">(</span><span class="va">Sample</span>, <span class="va">factor</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_names-methods.html">sample_names</a></span><span class="op">(</span><span class="va">mock_actual</span><span class="op">)</span><span class="op">)</span>,
@@ -420,11 +424,11 @@
   <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">Sample</span>, ncol <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">theme</span><span class="op">(</span>
     axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>
-  <span class="op">)</span></pre></div>
+  <span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
 <p>We can see that the calibrated compositions are typically substantially closer to the actual proportions than the original observations. We can also plot the calibrated vs. actual (pseudo-log-transformed) proportions and compare to the earlier plot of observed vs. actual.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit">
-<span class="va">props.cal</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">props.cal</span> <span class="op">%&gt;%</span>
   <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Type</span>, values_from <span class="op">=</span> <span class="va">Abundance</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">pivot_longer</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Observed</span>, <span class="va">Calibrated</span><span class="op">)</span>, 
     names_to <span class="op">=</span> <span class="st">"Type"</span>, values_to <span class="op">=</span> <span class="st">"Proportion"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -434,15 +438,15 @@
   <span class="fu"><a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_quasirandom.html">geom_quasirandom</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">Type</span><span class="op">)</span> <span class="op">+</span>
   <span class="va">axes</span> <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></pre></div>
+  <span class="fu">scale_color_brewer</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, palette <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_files/figure-html/unnamed-chunk-24-1.png" width="672"></p>
-<p>This plot has essentially same information as the earlier plot examining the model fit, but seen from a slightly different angle. We can see that calibration in this dataset clearly reduces the relative error in proportions across the full range of tested true proportions, but leads to estimates that are systematically too low at low proportions by a small factor.</p>
+<p>This plot has essentially same information as the earlier plot examining the model fit, but seen from a different angle. We can see that calibration in this dataset clearly reduces the relative error in proportions across the tested range of actual proportions, but leads to estimates that are systematically too low at low proportions.</p>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
-<div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/session_info.html">session_info</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; ─ Session info ───────────────────────────────────────────────────────────────</span>
 <span class="co">#&gt;  setting  value                       </span>
 <span class="co">#&gt;  version  R version 4.0.3 (2020-10-10)</span>
@@ -453,119 +457,123 @@
 <span class="co">#&gt;  collate  en_US.UTF-8                 </span>
 <span class="co">#&gt;  ctype    en_US.UTF-8                 </span>
 <span class="co">#&gt;  tz       America/New_York            </span>
-<span class="co">#&gt;  date     2020-10-21                  </span>
+<span class="co">#&gt;  date     2020-12-20                  </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ─ Packages ───────────────────────────────────────────────────────────────────</span>
-<span class="co">#&gt;  package      * version    date       lib source        </span>
-<span class="co">#&gt;  ade4           1.7-15     2020-02-13 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  ape            5.4-1      2020-08-13 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  assertthat     0.2.1      2019-03-21 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  backports      1.1.10     2020-09-15 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  beeswarm       0.2.3      2016-04-25 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  Biobase        2.48.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  BiocGenerics   0.34.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  biomformat     1.16.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  Biostrings     2.56.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  blob           1.2.1      2020-01-20 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  broom          0.7.1      2020-10-02 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cellranger     1.1.0      2016-07-27 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  cli            2.0.2      2020-02-28 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  cluster        2.1.0      2019-06-19 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  codetools      0.2-16     2018-12-24 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  colorspace     1.4-1      2019-03-18 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  cowplot      * 1.1.0      2020-09-08 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  crayon         1.3.4      2017-09-16 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  data.table     1.13.0     2020-07-24 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  DBI            1.1.0      2019-12-15 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  dbplyr         1.4.4      2020-05-27 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  desc           1.2.0      2018-05-01 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  digest         0.6.25     2020-02-23 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  dplyr        * 1.0.2      2020-08-18 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  ellipsis       0.3.1      2020-05-15 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  evaluate       0.14       2019-05-28 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  fansi          0.4.1      2020-01-08 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  farver         2.0.3      2020-01-16 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  forcats      * 0.5.0      2020-03-01 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  foreach        1.5.0      2020-03-30 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  fs             1.5.0      2020-07-31 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  generics       0.0.2      2018-11-29 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  ggbeeswarm   * 0.6.0      2017-08-07 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  ggplot2      * 3.3.2      2020-06-19 [2] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  glue           1.4.2      2020-08-27 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  gtable         0.3.0      2019-03-25 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  haven          2.3.1      2020-06-01 [2] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  here           0.1        2017-05-28 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  hms            0.5.3      2020-01-08 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  htmltools      0.5.0      2020-06-16 [2] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  httr           1.4.2      2020-07-20 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  igraph         1.2.5      2020-03-19 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  IRanges        2.22.2     2020-05-21 [2] Bioconductor  </span>
-<span class="co">#&gt;  iterators      1.0.12     2019-07-26 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  jsonlite       1.7.1      2020-09-07 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  knitr          1.30       2020-09-22 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  labeling       0.3        2014-08-23 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  lattice        0.20-41    2020-04-02 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  lifecycle      0.2.0      2020-03-06 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  lubridate      1.7.9      2020-06-08 [2] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  magrittr       1.5        2014-11-22 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  MASS           7.3-53     2020-09-09 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  Matrix         1.2-18     2019-11-27 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  memoise        1.1.0      2017-04-21 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  metacal      * 0.1.0.9011 2020-10-21 [1] local         </span>
-<span class="co">#&gt;  mgcv           1.8-33     2020-08-27 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  modelr         0.1.8      2020-05-19 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  multtest       2.44.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  munsell        0.5.0      2018-06-12 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  nlme           3.1-149    2020-08-23 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  permute        0.9-5      2019-03-12 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  phyloseq     * 1.32.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  pillar         1.4.6      2020-07-10 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  pkgconfig      2.0.3      2019-09-22 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  pkgdown        1.6.1      2020-09-12 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  plyr           1.8.6      2020-03-03 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  purrr        * 0.3.4      2020-04-17 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  R6             2.4.1      2019-11-12 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  ragg           0.3.1      2020-07-03 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  RColorBrewer   1.1-2      2014-12-07 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  Rcpp           1.0.5      2020-07-06 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  readr        * 1.3.1      2018-12-21 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  readxl         1.3.1      2019-03-13 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  reprex         0.3.0      2019-05-16 [2] CRAN (R 4.0.1)</span>
-<span class="co">#&gt;  reshape2       1.4.4      2020-04-09 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  rhdf5          2.32.2     2020-07-03 [2] Bioconductor  </span>
-<span class="co">#&gt;  Rhdf5lib       1.10.1     2020-07-09 [2] Bioconductor  </span>
-<span class="co">#&gt;  rlang          0.4.7      2020-07-09 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rmarkdown      2.4        2020-09-30 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  rprojroot      1.3-2      2018-01-03 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  rstudioapi     0.11       2020-02-07 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  rvest          0.3.6      2020-07-25 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  S4Vectors      0.26.1     2020-05-16 [2] Bioconductor  </span>
-<span class="co">#&gt;  scales         1.1.1      2020-05-11 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  sessioninfo    1.1.1      2018-11-05 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  stringi        1.5.3      2020-09-09 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  stringr      * 1.4.0      2019-02-10 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  survival       3.2-7      2020-09-28 [3] CRAN (R 4.0.3)</span>
-<span class="co">#&gt;  systemfonts    0.3.2      2020-09-29 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tibble       * 3.0.3      2020-07-10 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tidyr        * 1.1.2      2020-08-27 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  tidyselect     1.1.0      2020-05-11 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  tidyverse    * 1.3.0      2019-11-21 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  useful         1.2.6      2018-10-08 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  utf8           1.1.4      2018-05-24 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  vctrs          0.3.4      2020-08-29 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  vegan          2.5-6      2019-09-01 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  vipor          0.4.5      2017-03-22 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  viridisLite    0.3.0      2018-02-01 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  withr          2.3.0      2020-09-22 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xfun           0.18       2020-09-29 [2] CRAN (R 4.0.2)</span>
-<span class="co">#&gt;  xml2           1.3.2      2020-04-23 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  XVector        0.28.0     2020-04-27 [2] Bioconductor  </span>
-<span class="co">#&gt;  yaml           2.2.1      2020-02-01 [2] CRAN (R 4.0.0)</span>
-<span class="co">#&gt;  zlibbioc       1.34.0     2020-04-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  package      * version date       lib source        </span>
+<span class="co">#&gt;  ade4           1.7-16  2020-10-28 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  ape            5.4-1   2020-08-13 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  assertthat     0.2.1   2019-03-21 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  backports      1.2.0   2020-11-02 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  beeswarm       0.2.3   2016-04-25 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  Biobase        2.50.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  BiocGenerics   0.36.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  biomformat     1.18.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  Biostrings     2.58.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  broom          0.7.2   2020-10-20 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  cellranger     1.1.0   2016-07-27 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  cli            2.2.0   2020-11-20 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  cluster        2.1.0   2019-06-19 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  codetools      0.2-16  2018-12-24 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  colorspace     2.0-0   2020-11-11 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  cowplot      * 1.1.0   2020-09-08 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  crayon         1.3.4   2017-09-16 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  data.table     1.13.2  2020-10-19 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  DBI            1.1.0   2019-12-15 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  dbplyr         2.0.0   2020-11-03 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  desc           1.2.0   2018-05-01 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  digest         0.6.27  2020-10-24 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  dplyr        * 1.0.2   2020-08-18 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ellipsis       0.3.1   2020-05-15 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  evaluate       0.14    2019-05-28 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  fansi          0.4.1   2020-01-08 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  farver         2.0.3   2020-01-16 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  forcats      * 0.5.0   2020-03-01 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  foreach        1.5.1   2020-10-15 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  fs             1.5.0   2020-07-31 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  generics       0.1.0   2020-10-31 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  ggbeeswarm   * 0.6.0   2017-08-07 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  ggplot2      * 3.3.2   2020-06-19 [2] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  glue           1.4.2   2020-08-27 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  gtable         0.3.0   2019-03-25 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  haven          2.3.1   2020-06-01 [2] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  here           1.0.0   2020-11-15 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  hms            0.5.3   2020-01-08 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  htmltools      0.5.0   2020-06-16 [2] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  httr           1.4.2   2020-07-20 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  igraph         1.2.6   2020-10-06 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  IRanges        2.24.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  iterators      1.0.13  2020-10-15 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  jsonlite       1.7.1   2020-09-07 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  knitr          1.30    2020-09-22 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  labeling       0.4.2   2020-10-20 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  lattice        0.20-41 2020-04-02 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  lifecycle      0.2.0   2020-03-06 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  lubridate      1.7.9.2 2020-11-13 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  magrittr       2.0.1   2020-11-17 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  MASS           7.3-53  2020-09-09 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  Matrix         1.2-18  2019-11-27 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  memoise        1.1.0   2017-04-21 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  metacal      * 0.2.0   2020-12-20 [1] local         </span>
+<span class="co">#&gt;  mgcv           1.8-33  2020-08-27 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  modelr         0.1.8   2020-05-19 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  multtest       2.46.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  munsell        0.5.0   2018-06-12 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  nlme           3.1-149 2020-08-23 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  permute        0.9-5   2019-03-12 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  phyloseq     * 1.34.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  pillar         1.4.7   2020-11-20 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  pkgconfig      2.0.3   2019-09-22 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  pkgdown        1.6.1   2020-09-12 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  plyr           1.8.6   2020-03-03 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  prettyunits    1.1.1   2020-01-24 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  progress       1.2.2   2019-05-16 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  ps             1.4.0   2020-10-07 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  purrr        * 0.3.4   2020-04-17 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  R6             2.5.0   2020-10-28 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  ragg           0.4.0   2020-10-05 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  RColorBrewer   1.1-2   2014-12-07 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  Rcpp           1.0.5   2020-07-06 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  readr        * 1.4.0   2020-10-05 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  readxl         1.3.1   2019-03-13 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  reprex         0.3.0   2019-05-16 [2] CRAN (R 4.0.1)</span>
+<span class="co">#&gt;  reshape2       1.4.4   2020-04-09 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  rhdf5          2.34.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  rhdf5filters   1.2.0   2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  Rhdf5lib       1.12.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  rlang          0.4.8   2020-10-08 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rmarkdown      2.5     2020-10-21 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rprojroot      2.0.2   2020-11-15 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rstudioapi     0.13    2020-11-12 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  rvest          0.3.6   2020-07-25 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  S4Vectors      0.28.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  scales         1.1.1   2020-05-11 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  sessioninfo    1.1.1   2018-11-05 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  stringi        1.5.3   2020-09-09 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  stringr      * 1.4.0   2019-02-10 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  survival       3.2-7   2020-09-28 [3] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  systemfonts    0.3.2   2020-09-29 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  textshaping    0.2.1   2020-11-13 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  tibble       * 3.0.4   2020-10-12 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  tidyr        * 1.1.2   2020-08-27 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  tidyselect     1.1.0   2020-05-11 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  tidyverse    * 1.3.0   2019-11-21 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  useful         1.2.6   2018-10-08 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  utf8           1.1.4   2018-05-24 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  vctrs          0.3.5   2020-11-17 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  vegan          2.5-6   2019-09-01 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  vipor          0.4.5   2017-03-22 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  viridisLite    0.3.0   2018-02-01 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  withr          2.3.0   2020-09-22 [2] CRAN (R 4.0.2)</span>
+<span class="co">#&gt;  xfun           0.19    2020-10-30 [2] CRAN (R 4.0.3)</span>
+<span class="co">#&gt;  xml2           1.3.2   2020-04-23 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  XVector        0.30.0  2020-10-27 [2] Bioconductor  </span>
+<span class="co">#&gt;  yaml           2.2.1   2020-02-01 [2] CRAN (R 4.0.0)</span>
+<span class="co">#&gt;  zlibbioc       1.36.0  2020-10-27 [2] Bioconductor  </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; [1] /tmp/RtmppncHeN/temp_libpath18eca245f54b6</span>
+<span class="co">#&gt; [1] /tmp/Rtmp4AlMtO/temp_libpathfe674631225b</span>
 <span class="co">#&gt; [2] /home/michael/R/x86_64-pc-linux-gnu-library/4.0</span>
-<span class="co">#&gt; [3] /usr/lib/R/library</span></pre></div>
+<span class="co">#&gt; [3] /usr/lib/R/library</span></code></pre></div>
 </div>
   </div>
 

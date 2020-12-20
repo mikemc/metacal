@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute taxon ratios from a tidy data frame — compute_ratios • metacal</title>
+<title>Changelog • metacal</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,7 @@
 
 
 
-<meta property="og:title" content="Compute taxon ratios from a tidy data frame — compute_ratios" />
-<meta property="og:description" content="Assumes the taxon variable name is Taxon" />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -59,7 +58,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -123,38 +122,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute taxon ratios from a tidy data frame</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mikemc/metacal/blob/master/R/ratios.R'><code>R/ratios.R</code></a></small>
-    <div class="hidden name"><code>compute_ratios.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/mikemc/metacal/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Assumes the taxon variable name is <code>Taxon</code></p>
-    </div>
-
-    <pre class="usage"><span class='fu'>compute_ratios</span><span class='op'>(</span>
-  <span class='va'>.data</span>,
-  group_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Sample"</span><span class='op'>)</span>,
-  comp_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select_all.html'>select_if</a></span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>is.numeric</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>group_vars</span><span class='op'>)</span>,
-  drop <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>drop</th>
-      <td><p>Whether to drop the individual taxon quantities</p></td>
-    </tr>
-    </table>
-
-
+    <div id="metacal-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#metacal-020" class="anchor"></a>metacal 0.2.0</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
+<div id="new-estimation-and-calibration-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-estimation-and-calibration-functions" class="anchor"></a>New estimation and calibration functions</h3>
+<p><code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> and <code><a href="../reference/calibrate.html">calibrate()</a></code> provide easy-to-use high-level interfaces to the original metacal bias-estimation and calibration method. Their use is illustrated in the new tutorial.</p>
+</div>
+<div id="new-utility-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-utility-functions" class="anchor"></a>New utility functions</h3>
+<ul>
+<li><p><code><a href="../reference/pairwise_ratios.html">pairwise_ratios()</a></code> allows computing ratios between pairs of taxa and/or samples.</p></li>
+<li><p><code><a href="../reference/perturb.html">perturb()</a></code> applies a compositional perturbation to all observations in an abundance matrix (or phyloseq object).</p></li>
+</ul>
+</div>
+<div id="support-for-phyloseq-objects" class="section level3">
+<h3 class="hasAnchor">
+<a href="#support-for-phyloseq-objects" class="anchor"></a>Support for phyloseq objects</h3>
+<p>The new functions <code><a href="../reference/estimate_bias.html">estimate_bias()</a></code>, <code><a href="../reference/perturb.html">perturb()</a></code>, <code><a href="../reference/calibrate.html">calibrate()</a></code>, and <code><a href="../reference/pairwise_ratios.html">pairwise_ratios()</a></code> all work with objects from the <a href="https://joey711.github.io/phyloseq/">phyloseq</a> package as well as plain matrices. Phyloseq is now a required dependency, though may be made optional in the future.</p>
+</div>
+<div id="new-tutorial" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-tutorial" class="anchor"></a>New tutorial</h3>
+<p>The <a href="https://mikemc.github.io/metacal/articles/tutorial.html">new tutorial</a> demonstrates the new estimation and calibration functions on a new dataset from <a href="https://doi.org/10.1016/j.cub.2020.06.011">Leopold and Busby (2020)</a>.</p>
+</div>
+</div>
+<div id="minor-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-fixes" class="anchor"></a>Minor fixes</h2>
+<ul>
+<li>Fixed failure of <code>coocurrence_matrix()</code> when names were missing (<a href='https://github.com/mikemc/metacal/issues/5'>#5</a>).</li>
+</ul>
+</div>
+</div>
+    <div id="metacal-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#metacal-010" class="anchor"></a>metacal 0.1.0</h1>
+<p>Direct implementation of the methods described in <a href="https://elifesciences.org/articles/46923">McLaren MR, Willis AD, Callahan BJ (2019)</a> and used for <a href="https://github.com/mikemc/mgs-bias-manuscript">the analysis of that paper</a>.</p>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 
