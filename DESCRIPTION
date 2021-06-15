@@ -1,6 +1,6 @@
 Package: metacal
 Title: Bias estimation and calibration for metagenomics experiments
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: 
     person(given = "Michael",
            family = "McLaren",
@@ -31,7 +31,9 @@ Suggests:
     rmarkdown,
     tidyverse,
     cowplot,
-    ggbeeswarm
+    ggbeeswarm,
+    here,
+    readr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

@@ -31,12 +31,14 @@ build_matrix <- function(.data, rows, cols, elts, fill = NULL) {
     rows <- rlang::enquo(rows)
     cols <- rlang::enquo(cols)
     elts <- rlang::enquo(elts)
-    tb <- .data %>% dplyr::select(!!rows, !!cols, !!elts)
+    tb <- .data %>% 
+      dplyr::ungroup() %>%
+      dplyr::select(!!rows, !!cols, !!elts)
     if (!is.null(fill)) {
         tb <- tb %>% tidyr::complete(!!rows, !!cols,
             fill = rlang::list2(!!elts := fill))
     }
-    tb <- tb %>% tidyr::spread(!!cols, !!elts)
+    tb <- tb %>% tidyr::pivot_wider(names_from = !!cols, values_from = !!elts)
     mat <- tb %>% dplyr::select(-!!rows) %>% as("matrix")
     rownames(mat) <- tb %>% dplyr::pull(!!rows)
     mat

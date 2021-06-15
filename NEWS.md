@@ -1,3 +1,7 @@
+# metacal (development version)
+
+* `build_matrix()` now works correctly on grouped tibbles
+
 # metacal 0.2.0
 
 ## New features
