@@ -2,6 +2,9 @@
 
 * `build_matrix()` now works correctly on grouped tibbles
 
+* `pairwise_ratios()` now correctly handles phyloseq objects with just 1 sample or
+taxon
+
 # metacal 0.2.0
 
 ## New features

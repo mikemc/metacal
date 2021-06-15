@@ -107,15 +107,21 @@ pairwise_ratios.matrix <- function(x,
                                    filter = TRUE, 
                                    set_names = TRUE, 
                                    sep = ":") {
+  # How are the names of the other margin normally carried over?
+  # Currently they are lost when there is only one element in that dimension
   idx <- seq(dim(x)[[margin]])
   tb <- tidyr::crossing(i = idx, j = idx)
   if (filter)
     tb <- tb %>% dplyr::filter(i < j)
   if (margin == 1) {
-    ratios <- purrr::pmap(tb, function(i, j) f(x[i,], x[j,]))
+    ratios <- purrr::pmap(tb, 
+      function(i, j) f(x[i, , drop = FALSE], x[j, , drop = FALSE])
+    )
     ratio_mat <- do.call(rbind, ratios)
   } else if (margin == 2) {
-    ratios <- purrr::pmap(tb, function(i, j) f(x[,i], x[,j]))
+    ratios <- purrr::pmap(tb, 
+      function(i, j) f(x[, i, drop = FALSE], x[, j, drop = FALSE])
+    )
     ratio_mat <- do.call(cbind, ratios)
   } else
     stop("margin must be 1 or 2")
