@@ -2,8 +2,10 @@
 
 * `build_matrix()` now works correctly on grouped tibbles
 
-* `pairwise_ratios()` now correctly handles phyloseq objects with just 1 sample or
-taxon
+* `pairwise_ratios()` now correctly handles phyloseq objects with just 1 sample
+or taxon, and is properly exported
+
+* `estimate_bias()` now allows `observed` to have extra samples and taxa not in `actual`, by automatically subsetting to those in `actual`
 
 # metacal 0.2.0
 

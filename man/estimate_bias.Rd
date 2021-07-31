@@ -46,9 +46,10 @@ function will automatically set values in \code{observed} to 0 whose
 corresponding entries are 0 in \code{actual}, but it is up to you to replace 0
 values in \code{observed} with a non-zero value (such as a pseudocount).
 
-Name requirements for \code{observed} and \code{actual}: The row and column names (for
+Requirements for \code{observed} and \code{actual}: The row and column names (for
 matrices) or taxa and sample names (for phyloseq objects) must match, but
-can be in different orders.
+can be in different orders. Any taxa and samples in \code{observed} but not in
+\code{actual} will be dropped prior to estimation.
 }
 \examples{
 # Load data from the cellular mock communities of Brooks et al 2015

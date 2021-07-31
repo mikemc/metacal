@@ -10,9 +10,10 @@
 #' corresponding entries are 0 in `actual`, but it is up to you to replace 0
 #' values in `observed` with a non-zero value (such as a pseudocount).
 #'
-#' Name requirements for `observed` and `actual`: The row and column names (for
+#' Requirements for `observed` and `actual`: The row and column names (for
 #' matrices) or taxa and sample names (for phyloseq objects) must match, but
-#' can be in different orders.
+#' can be in different orders. Any taxa and samples in `observed` but not in
+#' `actual` will be dropped prior to estimation.
 #'
 #' @param observed Abundance matrix of observed compositions.
 #' @param actual Abundance matrix of actual or reference compositions for the
@@ -60,17 +61,17 @@ estimate_bias.matrix <- function(observed,
                                  boot = FALSE, 
                                  times = 1000) {
   stopifnot(margin %in% 1:2)
-  stopifnot(identical(dim(observed), dim(actual)))
+  stopifnot(all(rownames(observed) %in% rownames(actual)))
+  stopifnot(all(colnames(observed) %in% colnames(actual)))
 
-  # Align samples and taxa
-  stopifnot(setequal(rownames(observed), rownames(actual)))
-  stopifnot(setequal(colnames(observed), colnames(actual)))
-  observed <- observed[rownames(actual), colnames(actual)]
-  # Standardize on samples as rows
+  # Standardize on samples as rows, then align samples and taxa between the two
+  # matrices, dropping any not in `actual`.
   if (margin == 2) {
     observed <- t(observed)
     actual <- t(actual)
   }
+  observed <- observed[rownames(actual), colnames(actual)]
+
   # Handle spurious non-zero observations
   n <- sum(observed[actual == 0] > 0)
   if (n > 0) {
