@@ -73,9 +73,8 @@ pairwise_ratios <- function(x,
   UseMethod("pairwise_ratios")
 }
 
-setGeneric("pairwise_ratios")
-
 #' @rdname pairwise_ratios
+#' @export
 pairwise_ratios.default <- function(x,
                                     f = `/`, 
                                     filter = TRUE, 
@@ -101,6 +100,7 @@ pairwise_ratios.default <- function(x,
 # is ~20x faster and easily extends to work with matrices
 
 #' @rdname pairwise_ratios
+#' @export
 pairwise_ratios.matrix <- function(x, 
                                    margin, 
                                    f = `/`, 
@@ -141,6 +141,7 @@ pairwise_ratios.matrix <- function(x,
 # TODO: check that phyloseq is installed and throw and error if not
 
 #' @rdname pairwise_ratios
+#' @export
 pairwise_ratios.otu_table <- function(x, 
                                       margin = "taxa", 
                                       f = `/`, 
@@ -174,10 +175,9 @@ pairwise_ratios.otu_table <- function(x,
   phyloseq::otu_table(ratios, taxa_are_rows)
 }
 
-setMethod("pairwise_ratios", "otu_table", pairwise_ratios.otu_table)
-
 #' @importClassesFrom phyloseq phyloseq
 #' @rdname pairwise_ratios
+#' @export
 pairwise_ratios.phyloseq <- function(x, 
                                      margin = "taxa", 
                                      f = `/`, 
@@ -223,8 +223,6 @@ pairwise_ratios.phyloseq <- function(x,
 # TODO: check that this method of filtering samples is ok; and see which order
 # they end up in. Might instead do to exactly match the otu_table order
 #
-
-setMethod("pairwise_ratios", "phyloseq", pairwise_ratios.phyloseq)
 
 # TODO: preserve taxonomy and refseq information?
 

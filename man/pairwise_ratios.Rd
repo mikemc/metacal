@@ -10,26 +10,13 @@
 \usage{
 pairwise_ratios(x, ..., f = `/`, filter = TRUE, set_names = TRUE, sep = ":")
 
-pairwise_ratios.default(x, f = `/`, filter = TRUE, set_names = TRUE, sep = ":")
+\method{pairwise_ratios}{default}(x, f = `/`, filter = TRUE, set_names = TRUE, sep = ":")
 
-pairwise_ratios.matrix(
-  x,
-  margin,
-  f = `/`,
-  filter = TRUE,
-  set_names = TRUE,
-  sep = ":"
-)
+\method{pairwise_ratios}{matrix}(x, margin, f = `/`, filter = TRUE, set_names = TRUE, sep = ":")
 
-pairwise_ratios.otu_table(
-  x,
-  margin = "taxa",
-  f = `/`,
-  filter = TRUE,
-  sep = ":"
-)
+\method{pairwise_ratios}{otu_table}(x, margin = "taxa", f = `/`, filter = TRUE, sep = ":")
 
-pairwise_ratios.phyloseq(x, margin = "taxa", f = `/`, filter = TRUE, sep = ":")
+\method{pairwise_ratios}{phyloseq}(x, margin = "taxa", f = `/`, filter = TRUE, sep = ":")
 }
 \arguments{
 \item{x}{A vector or matrix}

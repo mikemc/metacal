@@ -100,8 +100,13 @@ estimate_bias.matrix <- function(observed,
 #' @method estimate_bias otu_table
 #' @export
 estimate_bias.otu_table <- function(observed, actual, ...) {
+  stopifnot(class(actual) %in% c("otu_table", "phyloseq"))
   stopifnot(setequal(taxa_names(observed), taxa_names(actual)))
   stopifnot(setequal(sample_names(observed), sample_names(actual)))
+
+  # Calling `otu_table(actual)` ensures this works whether `actual` is a
+  # phyloseq or otu_table object.
+  actual <- otu_table(actual)
 
   # Orient both tables with samples as rows before passing to matrix method,
   # which will adjust row and column order.
@@ -120,14 +125,11 @@ estimate_bias.otu_table <- function(observed, actual, ...) {
 #' @method estimate_bias phyloseq
 #' @export
 estimate_bias.phyloseq <- function(observed, actual, ...) {
+  stopifnot(class(actual) %in% c("otu_table", "phyloseq"))
+  # Calling `otu_table()` on an `otu_table()` just returns itself; hence this
+  # call works whether `actual` is a phyloseq or otu_table object.
   estimate_bias.otu_table(otu_table(observed), otu_table(actual), ...)
 }
-
-setMethod("estimate_bias", c("matrix", "matrix"), estimate_bias.matrix)
-setMethod("estimate_bias", c("otu_table", "otu_table"), estimate_bias.otu_table)
-setMethod("estimate_bias", c("phyloseq", "phyloseq"), estimate_bias.phyloseq)
-setMethod("estimate_bias", c("otu_table", "phyloseq"), estimate_bias.phyloseq)
-setMethod("estimate_bias", c("phyloseq", "otu_table"), estimate_bias.phyloseq)
 
 #' @export
 fitted.mc_bias_fit <- function(object) {

@@ -95,9 +95,6 @@ perturb.mc_bias_fit <- function(x, y) {
   x
 }
 
-setMethod("perturb", c("otu_table", "numeric"), perturb.otu_table)
-setMethod("perturb", c("phyloseq", "numeric"), perturb.phyloseq)
-
 # calibrate -------------------------------------------------------------------
 
 #' Calibrate a relative-abundance matrix by a bias vector
@@ -165,7 +162,3 @@ calibrate.phyloseq <- function(observed, bias, norm = "close") {
   otu_table(observed) <- calibrate(otu_table(observed), bias, norm = norm)
   observed
 }
-
-setMethod("calibrate", c("matrix", "numeric"), calibrate.matrix)
-setMethod("calibrate", c("otu_table", "numeric"), calibrate.otu_table)
-setMethod("calibrate", c("phyloseq", "numeric"), calibrate.phyloseq)
