@@ -1,0 +1,26 @@
+reference:
+- title: Bias estimation and calibration
+- contents:
+  - estimate_bias
+  - calibrate
+  - starts_with("cooccurrence")
+- title: Compositional-data computations
+- contents:
+  - perturb
+  - pairwise_ratios
+  - compute_ratios
+  - center
+  - bootrep_center
+  - center_elts
+  - close_elts
+  - clr
+  - logit
+  - odds
+  - anorm
+  - xydist
+  - starts_with("gm")
+- title: Data-frame manipulation and coercion
+- contents:
+  - as_matrix
+  - build_matrix
+  - mutate_by

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metacal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9005</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -105,7 +105,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mikemc/metacal/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -136,7 +136,7 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-bias-estimation-and-calibration" class="hasAnchor"><a href="#section-bias-estimation-and-calibration" class="anchor"></a>Bias estimation and calibration</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -148,27 +148,9 @@
       <tr>
         
         <td>
-          <p><code><a href="anorm.html">anorm()</a></code> </p>
+          <p><code><a href="estimate_bias.html">estimate_bias()</a></code> </p>
         </td>
-        <td><p>Aitchison norm of x</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="as_matrix.html">as_matrix()</a></code> </p>
-        </td>
-        <td><p>Coerce a (wide) data frame to a matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bootrep_center.html">bootrep_center()</a></code> </p>
-        </td>
-        <td><p>Generate bootstrap replicates of the sample center</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_matrix.html">build_matrix()</a></code> </p>
-        </td>
-        <td><p>Create a matrix from columns of a tidy data frame</p></td>
+        <td><p>Estimate bias from control measurements</p></td>
       </tr><tr>
         
         <td>
@@ -178,9 +160,52 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="cooccurrence.html">cooccurrence_matrix()</a></code> <code><a href="cooccurrence.html">cooccurrence_network()</a></code> <code><a href="cooccurrence.html">cooccurrence_components()</a></code> </p>
+        </td>
+        <td><p>Taxon co-occurrence network</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-compositional-data-computations" class="hasAnchor"><a href="#section-compositional-data-computations" class="anchor"></a>Compositional-data computations</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="perturb.html">perturb()</a></code> </p>
+        </td>
+        <td><p>Compositionally perturb a relative-abundance matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pairwise_ratios.html">pairwise_ratios()</a></code> </p>
+        </td>
+        <td><p>Pairwise ratios of vector elements and matrix rows or columns</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compute_ratios.html">compute_ratios()</a></code> </p>
+        </td>
+        <td><p>Compute taxon ratios from a tidy data frame</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="center.html">center()</a></code> </p>
         </td>
         <td><p>Compute the center (compositional mean) of a set of compositions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="bootrep_center.html">bootrep_center()</a></code> </p>
+        </td>
+        <td><p>Generate bootstrap replicates of the sample center</p></td>
       </tr><tr>
         
         <td>
@@ -202,21 +227,27 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="compute_ratios.html">compute_ratios()</a></code> </p>
+          <p><code><a href="logit.html">logit()</a></code> </p>
         </td>
-        <td><p>Compute taxon ratios from a tidy data frame</p></td>
+        <td><p>Logit (log-odds) of the probability vector x</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cooccurrence.html">cooccurrence_matrix()</a></code> <code><a href="cooccurrence.html">cooccurrence_network()</a></code> <code><a href="cooccurrence.html">cooccurrence_components()</a></code> </p>
+          <p><code><a href="odds.html">odds()</a></code> </p>
         </td>
-        <td><p>Taxon co-occurrence network</p></td>
+        <td><p>Odds of the probability vector x</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="estimate_bias.html">estimate_bias()</a></code> </p>
+          <p><code><a href="anorm.html">anorm()</a></code> </p>
         </td>
-        <td><p>Estimate bias from control measurements</p></td>
+        <td><p>Aitchison norm of x</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="xydist.html">xydist()</a></code> </p>
+        </td>
+        <td><p>Distance or dissimilarity between relative abundance vectors x and y</p></td>
       </tr><tr>
         
         <td>
@@ -247,66 +278,37 @@
           <p><code><a href="gm_sd.html">gm_sd()</a></code> </p>
         </td>
         <td><p>Geometric standard deviation of x</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-frame-manipulation-and-coercion" class="hasAnchor"><a href="#section-data-frame-manipulation-and-coercion" class="anchor"></a>Data-frame manipulation and coercion</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="as_matrix.html">as_matrix()</a></code> </p>
+        </td>
+        <td><p>Coerce a (wide) data frame to a matrix</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="import_phyloseq.html">import_phyloseq</a></code> </p>
+          <p><code><a href="build_matrix.html">build_matrix()</a></code> </p>
         </td>
-        <td><p>Import phyloseq classes and functions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="log_center_proj.html">log_center_proj()</a></code> </p>
-        </td>
-        <td><p>Compute the log center by the projection method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="log_center_rss.html">log_center_rss()</a></code> </p>
-        </td>
-        <td><p>Compute the log center by numerical optimization</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="logit.html">logit()</a></code> </p>
-        </td>
-        <td><p>Logit (log-odds) of the probability vector x</p></td>
+        <td><p>Create a matrix from columns of a tidy data frame</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="mutate_by.html">mutate_by()</a></code> </p>
         </td>
         <td><p>Mutate within groups</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="odds.html">odds()</a></code> </p>
-        </td>
-        <td><p>Odds of the probability vector x</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pairwise_ratios.html">pairwise_ratios()</a></code> <code><a href="pairwise_ratios.html">pairwise_ratios.default()</a></code> <code><a href="pairwise_ratios.html">pairwise_ratios.matrix()</a></code> <code><a href="pairwise_ratios.html">pairwise_ratios.otu_table()</a></code> <code><a href="pairwise_ratios.html">pairwise_ratios.phyloseq()</a></code> </p>
-        </td>
-        <td><p>Pairwise ratios of vector elements and matrix rows or columns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="perturb.html">perturb()</a></code> </p>
-        </td>
-        <td><p>Compositionally perturb a relative-abundance matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="proj_mat.html">proj_mat()</a></code> </p>
-        </td>
-        <td><p>Projection matrix P_M</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="xydist.html">xydist()</a></code> </p>
-        </td>
-        <td><p>Distance or dissimilarity between relative abundance vectors x and y</p></td>
       </tr>
     </tbody>
     </table>

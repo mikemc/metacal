@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metacal</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9005</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -105,7 +105,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/mikemc/metacal/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -126,6 +126,15 @@
       <small>Source: <a href='https://github.com/mikemc/metacal/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="metacal-development-version" class="section level1">
+<h1 class="page-header" data-toc-text="development version">
+<a href="#metacal-development-version" class="anchor"></a>metacal (development version)</h1>
+<ul>
+<li><p><code><a href="../reference/build_matrix.html">build_matrix()</a></code> now works correctly on grouped tibbles</p></li>
+<li><p><code><a href="../reference/pairwise_ratios.html">pairwise_ratios()</a></code> now correctly handles phyloseq objects with just 1 sample or taxon, and is properly exported</p></li>
+<li><p><code><a href="../reference/estimate_bias.html">estimate_bias()</a></code> now allows <code>observed</code> to have extra samples and taxa not in <code>actual</code>, by automatically subsetting to those in <code>actual</code></p></li>
+</ul>
+</div>
     <div id="metacal-020" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#metacal-020" class="anchor"></a>metacal 0.2.0</h1>
