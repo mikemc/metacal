@@ -16,7 +16,7 @@ estimate_bias(observed, actual, ...)
 \method{estimate_bias}{phyloseq}(observed, actual, ...)
 }
 \arguments{
-\item{observed}{Abundance matrix of observed compositions..}
+\item{observed}{Abundance matrix of observed compositions.}
 
 \item{actual}{Abundance matrix of actual or reference compositions for the
 same samples and taxa in \code{observed}.}
@@ -49,6 +49,23 @@ values in \code{observed} with a non-zero value (such as a pseudocount).
 Name requirements for \code{observed} and \code{actual}: The row and column names (for
 matrices) or taxa and sample names (for phyloseq objects) must match, but
 can be in different orders.
+}
+\examples{
+# Load data from the cellular mock communities of Brooks et al 2015
+dr <- system.file("extdata", package = "metacal")
+list.files(dr)
+actual <- file.path(dr, "brooks2015-actual.csv") |>
+  read.csv(row.names = "Sample") |>
+  as("matrix")
+observed <- file.path(dr, "brooks2015-observed.csv") |>
+  read.csv(row.names = "Sample") |>
+  subset(select = - Other) |>
+  as("matrix")
+sam <- file.path(dr, "brooks2015-sample-data.csv") |> read.csv()
+
+# Estimate bias with bootstrapping for error estimation
+mc_fit <- estimate_bias(observed, actual, margin = 1, boot = TRUE)
+summary(mc_fit)
 }
 \seealso{
 \code{\link[=center]{center()}} \code{\link[=calibrate]{calibrate()}}
