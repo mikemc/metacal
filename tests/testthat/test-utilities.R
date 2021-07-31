@@ -2,10 +2,10 @@
 # devtools::test_active_file(here::here("tests", "testthat", "test-utilities.R"))
 
 # Setup: Load Brooks files
-x <- here::here("inst/extdata/brooks2015-actual.csv") %>%
+x <- system.file("extdata", "brooks2015-actual.csv", package = "metacal") %>%
   readr::read_csv() %>%
   dplyr::arrange(Sample) # Not strictly needed since already in this order
-sam <- here::here("inst/extdata/brooks2015-sample-data.csv") %>%
+sam <- system.file("extdata", "brooks2015-sample-data.csv", package = "metacal") %>%
   readr::read_csv() 
 
 test_that("`as_matrix()` and `build_matrix()` work as inverses", {

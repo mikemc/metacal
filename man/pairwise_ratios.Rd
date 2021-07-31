@@ -49,7 +49,7 @@ For a matrix, computes the ratios of the supplied margin (1 = rows, 2 =
 cols). Otherwise, computes the ratios of the elements.
 }
 \examples{
-  mat <- seq(10) \%>\%
+  mat <- seq(10) |>
     matrix(nrow = 2)
   rownames(mat) <- paste0('r', seq(2))
   colnames(mat) <- paste0('c', seq(5))

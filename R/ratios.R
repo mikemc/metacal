@@ -57,7 +57,7 @@ compute_ratios <- function(.data,
 #' @name pairwise_ratios
 #' @export
 #' @examples
-#'   mat <- seq(10) %>%
+#'   mat <- seq(10) |>
 #'     matrix(nrow = 2)
 #'   rownames(mat) <- paste0('r', seq(2))
 #'   colnames(mat) <- paste0('c', seq(5))

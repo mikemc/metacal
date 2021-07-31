@@ -54,9 +54,9 @@ Next, we download the source data from Leopold and Busby (2020), which is
 available in [Zenodo record 3872145](https://zenodo.org/record/3872145). Set
 `data_path` to wherever you would like the data to be downloaded.
 ```{r}
-data_path <- here::here("dev", "data", "leopold2020")
+data_path <- here::here("vignettes", "data", "leopold2020host")
 # To use a temporary directory:
-# data_path <- file.path(tempdir(), "leopold2020")
+# data_path <- file.path(tempdir(), "leopold2020host")
 if (!dir.exists(data_path)) {
   dir.create(data_path, recursive = TRUE)
   download.file(
