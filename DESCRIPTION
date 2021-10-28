@@ -1,6 +1,6 @@
 Package: metacal
 Title: Bias estimation and calibration for metagenomics experiments
-Version: 0.2.0.9005
+Version: 0.2.0.9006
 Authors@R: 
     person(given = "Michael",
            family = "McLaren",
@@ -38,5 +38,5 @@ Suggests:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

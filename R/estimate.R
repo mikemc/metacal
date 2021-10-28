@@ -61,8 +61,8 @@ estimate_bias.matrix <- function(observed,
                                  boot = FALSE, 
                                  times = 1000) {
   stopifnot(margin %in% 1:2)
-  stopifnot(all(rownames(observed) %in% rownames(actual)))
-  stopifnot(all(colnames(observed) %in% colnames(actual)))
+  stopifnot(all(rownames(actual) %in% rownames(observed)))
+  stopifnot(all(colnames(actual) %in% colnames(observed)))
 
   # Standardize on samples as rows, then align samples and taxa between the two
   # matrices, dropping any not in `actual`.
@@ -102,8 +102,8 @@ estimate_bias.matrix <- function(observed,
 #' @export
 estimate_bias.otu_table <- function(observed, actual, ...) {
   stopifnot(class(actual) %in% c("otu_table", "phyloseq"))
-  stopifnot(setequal(taxa_names(observed), taxa_names(actual)))
-  stopifnot(setequal(sample_names(observed), sample_names(actual)))
+  stopifnot(all(taxa_names(actual) %in% taxa_names(observed)))
+  stopifnot(all(sample_names(actual) %in% sample_names(observed)))
 
   # Calling `otu_table(actual)` ensures this works whether `actual` is a
   # phyloseq or otu_table object.

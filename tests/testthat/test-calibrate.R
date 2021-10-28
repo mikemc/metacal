@@ -50,6 +50,21 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
   expect_error(perturb(fit, 1:3))
 })
 
+test_that("`estimate_bias()` silently drops taxa and samples not in 'actual'", {
+  actual <- otu %>%
+    phyloseq::prune_taxa(taxa_names(.)[-3], .) %>%
+    phyloseq::prune_samples(sample_names(.)[-4], .)
+  bias <- rlang::set_names(center_elts(y), phyloseq::taxa_names(otu))
+  observed <- perturb(otu, bias, norm = "keep")
+  # Mix up the sample and taxa order
+  observed <- observed[rownames(observed) %>% rev, colnames(observed) %>% rev]
+
+  expect_equal(
+    bias[-3] %>% center_elts, 
+    estimate_bias(observed, actual) %>% coef
+  )
+})
+
 test_that("`calibrate()` and `perturb()` are inverse operations", {
   expect_equal(
     otu,
