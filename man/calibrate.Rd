@@ -18,7 +18,8 @@ calibrate(observed, bias, ...)
 \arguments{
 \item{observed}{An abundance matrix or phyloseq object containing one}
 
-\item{bias}{A numeric vector of relative efficiencies}
+\item{bias}{A numeric vector of relative efficiencies or an object of class
+'mc_bias_fit' (from which efficiencies will be extracted)}
 
 \item{margin}{Matrix margin that corresponds to observations (samples);
 \code{1} for rows, \code{2} for columns}

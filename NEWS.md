@@ -7,6 +7,8 @@ or taxon, and is properly exported
 
 * `estimate_bias()` now allows `observed` to have extra samples and taxa not in `actual`, by automatically subsetting to those in `actual`
 
+* `calibrate()` now allows `bias` to be an 'mc_bias_fit' object
+
 # metacal 0.2.0
 
 ## New features

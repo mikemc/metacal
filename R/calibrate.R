@@ -116,7 +116,8 @@ perturb.mc_bias_fit <- function(x, y) {
 #' `observed`.
 #'
 #' @param observed An abundance matrix or phyloseq object containing one
-#' @param bias A numeric vector of relative efficiencies
+#' @param bias A numeric vector of relative efficiencies or an object of class
+#'   'mc_bias_fit' (from which efficiencies will be extracted)
 #' @param margin Matrix margin that corresponds to observations (samples); 
 #'   `1` for rows, `2` for columns
 #' @param norm String specifying how to normalize the calibrated observations;
@@ -134,6 +135,8 @@ calibrate <- function(observed, bias, ...) {
 #' @method calibrate matrix
 #' @export
 calibrate.matrix <- function(observed, bias, margin, norm = "close") {
+  if (inherits(bias, 'mc_bias_fit'))
+    bias <- coef(bias)
   perturb.matrix(observed, 1 / bias, margin = margin, norm = norm)
 }
 
@@ -141,6 +144,8 @@ calibrate.matrix <- function(observed, bias, margin, norm = "close") {
 #' @method calibrate otu_table
 #' @export
 calibrate.otu_table <- function(observed, bias, norm = "close") {
+  if (inherits(bias, 'mc_bias_fit'))
+    bias <- coef(bias)
   # The otu-table method will try to subset to the shared taxa in observed and
   # bias
   if (!identical(ntaxa(observed), length(bias))) {
