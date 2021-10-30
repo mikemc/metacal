@@ -1,6 +1,6 @@
 Package: metacal
 Title: Bias estimation and calibration for metagenomics experiments
-Version: 0.2.0.9007
+Version: 0.2.0.9008
 Authors@R: 
     person(given = "Michael",
            family = "McLaren",
@@ -16,6 +16,7 @@ License: MIT + file LICENSE
 Imports:
     dplyr,
     igraph,
+    lifecycle,
     magrittr,
     MASS,
     phyloseq,

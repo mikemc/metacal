@@ -9,6 +9,8 @@ or taxon, and is properly exported
 
 * `calibrate()` now allows `bias` to be an 'mc_bias_fit' object
 
+* Add `mean_efficiency()` to compute mean efficiency of control or new samples
+
 # metacal 0.2.0
 
 ## New features

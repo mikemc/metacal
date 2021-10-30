@@ -51,11 +51,18 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
 
   # NOTE: doesn't quite fit this test title
   # Test that calibrate works on mc_bias_fit objects
-  fit <- estimate_bias(observed, actual)
+  # fit <- estimate_bias(observed, actual)
   expect_equal(
     calibrate(observed, fit),
     calibrate(observed, coef(fit))
   )
+
+  # Test mean efficiency computation
+  me1 <- mean_efficiency(coef(fit), actual = fit$actual, margin = 1)
+  me2 <- mean_efficiency(fit)
+  me3 <- apply(fit$actual, 1, function(x) weighted.mean(coef(fit), x)) 
+  expect_equal(me1, me3)
+  expect_equal(me2, me3)
 })
 
 test_that("`estimate_bias()` silently drops taxa and samples not in 'actual'", {
