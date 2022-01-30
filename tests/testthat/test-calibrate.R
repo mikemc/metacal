@@ -1,5 +1,5 @@
 # run just this file:
-# devtools::test_file(here::here("tests", "testthat", "test-calibrate.R"))
+# devtools::test_active_file(here::here("tests", "testthat", "test-calibrate.R"))
 #
 # Covers estimate_bias(), perturb(), calibrate()
 
@@ -36,8 +36,8 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
 
   # non-zero values is observed that are zero in actual should be automatically
   # zeroed with a message
-  observed <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
-  expect_message(fit <- estimate_bias(observed, actual, boot = TRUE, times = 2))
+  observed1 <- otu_table(observed + 23 * (observed == 0), taxa_are_rows = TRUE)
+  expect_message(fit <- estimate_bias(observed1, actual, boot = TRUE, times = 2))
   expect_equal(bias, coef(fit))
 
   # Matrices stored in `fit` should have samples as rows, and so work without
@@ -58,11 +58,30 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
   )
 
   # Test mean efficiency computation
-  me1 <- mean_efficiency(coef(fit), actual = fit$actual, margin = 1)
-  me2 <- mean_efficiency(fit)
-  me3 <- apply(fit$actual, 1, function(x) weighted.mean(coef(fit), x)) 
+  me1 <- apply(fit$actual, 1, function(x) weighted.mean(coef(fit), x)) 
+  me2 <- mean_efficiency(fit$actual, coef(fit), margin = 1)
+  me3 <- mean_efficiency(fit)
   expect_equal(me1, me3)
   expect_equal(me2, me3)
+  me4 <- actual %>%
+    phyloseq::transform_sample_counts(close_elts) %>%
+    perturb(coef(fit), norm = 'none') %>%
+    phyloseq::sample_sums() %>%
+    .[names(me1)]
+  expect_equal(me1, me4)
+
+  # can also compute within `calibrate()`
+  sam <- data.frame(
+    dummy_var = seq(phyloseq::nsamples(observed)),
+    row.names = sample_names(observed)
+    ) %>%
+    phyloseq::sample_data()
+  cal <- phyloseq::phyloseq(observed, sam) %>%
+    calibrate(coef(fit), mean_name = 'silly_name')
+  me5 <- sample_data(cal)$silly_name
+  names(me5) <- sample_names(cal)
+  me5 <- me5[names(me1)]
+  expect_equal(me1, me4)
 })
 
 test_that("`estimate_bias()` silently drops taxa and samples not in 'actual'", {

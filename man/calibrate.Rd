@@ -13,7 +13,7 @@ calibrate(observed, bias, ...)
 
 \method{calibrate}{otu_table}(observed, bias, norm = "close")
 
-\method{calibrate}{phyloseq}(observed, bias, norm = "close")
+\method{calibrate}{phyloseq}(observed, bias, norm = "close", mean_name = ".mean_efficiency")
 }
 \arguments{
 \item{observed}{An abundance matrix or phyloseq object containing one}
@@ -26,6 +26,9 @@ calibrate(observed, bias, ...)
 
 \item{norm}{String specifying how to normalize the calibrated observations;
 see Details.}
+
+\item{mean_name}{Character vector or NULL. Name of the column in the sample
+data in which to store the mean efficiency, or NULL to skip.}
 }
 \description{
 Calibration via the simple deterministic procedure described in McLaren,

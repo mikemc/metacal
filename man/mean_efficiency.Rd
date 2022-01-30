@@ -2,43 +2,54 @@
 % Please edit documentation in R/mean_efficiency.R
 \name{mean_efficiency}
 \alias{mean_efficiency}
+\alias{mean_efficiency.matrix}
+\alias{mean_efficiency.otu_table}
+\alias{mean_efficiency.phyloseq}
 \alias{mean_efficiency.mc_bias_fit}
-\alias{mean_efficiency.numeric}
 \title{Compute sample mean efficiencies}
 \usage{
-mean_efficiency(bias, actual, observed, margin)
+mean_efficiency(x, ...)
 
-\method{mean_efficiency}{mc_bias_fit}(bias, actual = NULL, observed = NULL, margin = NULL)
+\method{mean_efficiency}{matrix}(x, bias, margin, type = "actual")
 
-\method{mean_efficiency}{numeric}(bias, actual = NULL, observed = NULL, margin)
+\method{mean_efficiency}{otu_table}(x, bias, type = "actual")
+
+\method{mean_efficiency}{phyloseq}(x, bias, type = "actual")
+
+\method{mean_efficiency}{mc_bias_fit}(x, newdata = NULL, margin = NULL, type = NULL)
 }
 \arguments{
-\item{bias}{A numeric vector of relative efficiencies or an object of class
-'mc_bias_fit' (from which efficiencies will be extracted)}
+\item{x}{A matrix, a phyloseq object with an otu_table, or an object of
+class 'mc_bias_fit'}
 
-\item{actual}{A matrix or NULL}
+\item{bias}{A (possibly named) numeric vector of relative efficiencies}
 
-\item{observed}{A matrix or NULL}
+\item{margin}{The margin containing the samples (observations)}
 
-\item{margin}{The margin containing the samples/observations}
+\item{type}{'actual' or 'observed', indicating the type of abundance
+profiles in the matrix \code{x} or \code{newdata}}
+
+\item{newdata}{NULL or an abundance matrix}
 }
 \description{
-Given an \code{mc_bias_fit} object or a vector of taxa efficiencies, compute the
-mean efficiency in the control samples in the \code{mc_bias_fit} object or a set
-of user-supplied samples. This function currently only works on matrices,
-not phyloseq objects.
+Given a matrix of 'observed' or 'actual' (e.g. calibrated) abundance
+profiles and a vector of relative efficiencies, compute the estimated mean
+efficiency for each sample.
 }
 \details{
-If \code{bias} is an \code{mc_bias_fit} object and \code{actual} and \code{observed} are both
-missing, then the estimated mean efficiency for the control samples used in
-the \code{mc_bias_fit} object will be computed. New samples should be given in
-either \code{actual} or \code{observed}, depending on whether they are nominal or
-calibrated abundances or observed (i.e. uncalibrated) data; observed data
-will be calibrated first.
+The mean efficiency of a sample equals \code{weighted.mean(bias, y)}, where
+\code{bias} is the vector of taxa efficiencies and \code{y} is the vector of taxa
+proportions.
 
-The mean efficiencies in a sample with is equal to \verb{weighted.mean(bias, x))}
-where \code{bias} is the vector of taxa efficiencies and \code{x} is the vector of
-taxa proportions.
+The \code{type \%in\% c('actual', 'observed')} specifies whether the data is
+'actual' (i.e. nominally known or calibrated abundances) or 'observed' (i.e.
+uncalibrated) data. 'Observed' data is calibrated to determine \code{y} prior to
+computing the mean efficiency.
+
+If \code{x} is an \code{mc_bias_fit} object, then the efficiencies will be extracted
+with \code{coef(x)}. An abundance matrix can optionally be given with \code{newdata};
+otherwise, the mean efficiency will be computed for the control samples in
+\code{x}.
 
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }

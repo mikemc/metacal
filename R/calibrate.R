@@ -122,6 +122,8 @@ perturb.mc_bias_fit <- function(x, y) {
 #'   `1` for rows, `2` for columns
 #' @param norm String specifying how to normalize the calibrated observations;
 #'   see Details.
+#' @param mean_name Character vector or NULL. Name of the column in the sample
+#'   data in which to store the mean efficiency, or NULL to skip.
 #' 
 #' @seealso [perturb()] [estimate_bias()]
 #' 
@@ -163,7 +165,21 @@ calibrate.otu_table <- function(observed, bias, norm = "close") {
 #' @rdname calibrate
 #' @method calibrate phyloseq
 #' @export
-calibrate.phyloseq <- function(observed, bias, norm = "close") {
+calibrate.phyloseq <- function(observed, 
+                               bias, 
+                               norm = "close", 
+                               mean_name = ".mean_efficiency") {
   otu_table(observed) <- calibrate(otu_table(observed), bias, norm = norm)
+  if (!is.null(mean_name) & !is.null(phyloseq::access(observed, 'sam_data'))) {
+    if (!is.character(mean_name))
+      stop('`mean_name` must be a character vector')
+    me <- mean_efficiency(
+      observed, 
+      bias, 
+      # `observed` is now calibrated so type = 'actual'
+      type = 'actual'
+    )
+    sample_data(observed)[, mean_name] <- me
+  }
   observed
 }

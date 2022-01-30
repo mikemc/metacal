@@ -11,6 +11,8 @@ or taxon, and is properly exported
 
 * Add `mean_efficiency()` to compute mean efficiency of control or new samples
 
+* `calibrate()` now (by default) computes and adds the mean efficiency to the sample data 
+
 # metacal 0.2.0
 
 ## New features
