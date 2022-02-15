@@ -45,7 +45,7 @@ mean_efficiency <- function(x, ...) {
 mean_efficiency.matrix <- function(x,
                                    bias,
                                    margin,
-                                   type = 'actual') {
+                                   type) {
   # First, get to point where `x` is a matrix with the 'actual' (unbiased)
   # profiles with samples as rows, and the taxa (columns) are properly aligned
   # with `bias`.
@@ -87,7 +87,7 @@ mean_efficiency.matrix <- function(x,
 #' @rdname mean_efficiency
 #' @method mean_efficiency otu_table
 #' @export
-mean_efficiency.otu_table <- function(x, bias, type = 'actual') {
+mean_efficiency.otu_table <- function(x, bias, type) {
   mean_efficiency(
     as(x, "matrix"), 
     bias,
@@ -99,7 +99,7 @@ mean_efficiency.otu_table <- function(x, bias, type = 'actual') {
 #' @rdname mean_efficiency
 #' @method mean_efficiency phyloseq
 #' @export
-mean_efficiency.phyloseq <- function(x, bias, type = 'actual') {
+mean_efficiency.phyloseq <- function(x, bias, type) {
   mean_efficiency(otu_table(x), bias, type = type)
 }
 

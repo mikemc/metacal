@@ -59,7 +59,7 @@ test_that("`estimate_bias()` correctly recovers a deterministic perturbation", {
 
   # Test mean efficiency computation
   me1 <- apply(fit$actual, 1, function(x) weighted.mean(coef(fit), x)) 
-  me2 <- mean_efficiency(fit$actual, coef(fit), margin = 1)
+  me2 <- mean_efficiency(fit$actual, coef(fit), margin = 1, type = 'actual')
   me3 <- mean_efficiency(fit)
   expect_equal(me1, me3)
   expect_equal(me2, me3)

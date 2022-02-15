@@ -10,11 +10,11 @@
 \usage{
 mean_efficiency(x, ...)
 
-\method{mean_efficiency}{matrix}(x, bias, margin, type = "actual")
+\method{mean_efficiency}{matrix}(x, bias, margin, type)
 
-\method{mean_efficiency}{otu_table}(x, bias, type = "actual")
+\method{mean_efficiency}{otu_table}(x, bias, type)
 
-\method{mean_efficiency}{phyloseq}(x, bias, type = "actual")
+\method{mean_efficiency}{phyloseq}(x, bias, type)
 
 \method{mean_efficiency}{mc_bias_fit}(x, newdata = NULL, margin = NULL, type = NULL)
 }
